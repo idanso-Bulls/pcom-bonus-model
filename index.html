@@ -534,6 +534,21 @@
     position: relative;
     top: -6px;
   }
+  .fixed-badge {
+    display: inline-block;
+    background: #c0392b;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 10px;
+    position: relative;
+    top: -6px;
+  }
   .bd-manual-override {
     margin-top: 12px;
     padding-top: 10px;
@@ -2101,7 +2116,8 @@ function computeBonus() {
   // Manual overrides apply to INTERNAL pool only
   let overridesTotal = 0;
   mbBreakdowns.forEach(b => {
-    const hasManual = b.mb.manualBonus !== undefined && b.mb.manualBonus !== null && b.mb.manualBonus !== '';
+    b.hasTotalOverride = b.mb.totalBonusOverride != null && b.mb.totalBonusOverride !== '';
+    const hasManual = !b.hasTotalOverride && b.mb.manualBonus !== undefined && b.mb.manualBonus !== null && b.mb.manualBonus !== '';
     b.hasManualBonus = hasManual;
     if (hasManual) overridesTotal += Number(b.mb.manualBonus);
   });
@@ -2114,13 +2130,19 @@ function computeBonus() {
 
   // Assign final bonuses
   mbBreakdowns.forEach(b => {
-    if (b.hasManualBonus) {
+    if (b.hasTotalOverride) {
+      // Total override: fixed amount, completely outside the pool
+      b.internalShare = 0;
+      b.whizzcoShare = 0;
+      b.bonus = Number(b.mb.totalBonusOverride);
+    } else if (b.hasManualBonus) {
       // Override replaces internal share. Whizzco share stays natural.
       b.internalShare = Number(b.mb.manualBonus);
+      b.bonus = b.internalShare + b.whizzcoShare;
     } else {
       b.internalShare = internalDistrWeight > 0 ? (b.internalWeight / internalDistrWeight) * internalMbPoolAfterOverrides : 0;
+      b.bonus = b.internalShare + b.whizzcoShare;
     }
-    b.bonus = b.internalShare + b.whizzcoShare;
 
     // projectsDetail shares: split bonus across projects proportionally
     const mbInternalW = b.projectsDetail.filter(d => d.category !== 'whizzco').reduce((s, d) => s + d.weight, 0);
@@ -2453,9 +2475,10 @@ function renderMBs() {
           <button class="btn-danger btn mb-del" data-mid="${mb.id}" title="Delete" style="margin-left:4px">&times;</button>
         </div>
 
-        <div class="mb-bonus-amount ${data.bonus > 0 ? '' : 'zero'}">${fmt2(data.bonus)}${data.hasManualBonus ? ' <span class="manual-badge">MANUAL</span>' : ''}</div>
+        <div class="mb-bonus-amount ${data.bonus > 0 ? '' : 'zero'}">${fmt2(data.bonus)}${data.hasTotalOverride ? ' <span class="fixed-badge">FIXED</span>' : (data.hasManualBonus ? ' <span class="manual-badge">MANUAL</span>' : '')}</div>
         <div class="mb-bonus-sub">${(() => {
           const parts = [];
+          if (data.hasTotalOverride) parts.push('Calculated would be: ' + fmt2(data.calculatedBonus));
           if (data.hasManualBonus) parts.push('Calculated would be: ' + fmt2(data.calculatedBonus));
           parts.push('Weight: ' + data.weight.toFixed(1));
           if (!data.hasManualBonus && data.internalWeight > 0 && computed.distrGlobalWeight > 0) {
@@ -2481,6 +2504,13 @@ function renderMBs() {
             <div class="bdmo-input-wrap">
               <div class="currency-prefix"><input type="text" inputmode="decimal" class="mb-manual-bonus" data-mid="${mb.id}" value="${mb.manualBonus != null && mb.manualBonus !== '' ? fmtInputNum(mb.manualBonus) : ''}" placeholder="Leave empty to use calculated"></div>
               ${data.hasManualBonus ? `<button class="bdmo-clear" data-mid="${mb.id}" title="Clear override">&times;</button>` : ''}
+            </div>
+          </div>
+          <div class="bd-manual-override" style="margin-top:6px">
+            <label class="bdmo-label">Total bonus override (replaces everything · not from pool)</label>
+            <div class="bdmo-input-wrap">
+              <div class="currency-prefix"><input type="text" inputmode="decimal" class="mb-total-override" data-mid="${mb.id}" value="${mb.totalBonusOverride != null && mb.totalBonusOverride !== '' ? fmtInputNum(mb.totalBonusOverride) : ''}" placeholder="Leave empty to use calculated"></div>
+              ${data.hasTotalOverride ? `<button class="bdmo-clear mb-total-override-clear" data-mid="${mb.id}" title="Clear override">&times;</button>` : ''}
             </div>
           </div>
         </div>` : ''}
@@ -2541,11 +2571,38 @@ function renderMBs() {
       saveState(); renderOverdrawWarning(); renderMBs(); renderSummary();
     });
   });
-  grid.querySelectorAll('.bdmo-clear').forEach(el => {
+  grid.querySelectorAll('.bdmo-clear:not(.mb-total-override-clear)').forEach(el => {
     el.addEventListener('click', e => {
       const mid = e.currentTarget.dataset.mid;
       const mb = state.mbs.find(m => m.id === mid);
       if (mb) { mb.manualBonus = null; saveState(); renderOverdrawWarning(); renderMBs(); renderSummary(); }
+    });
+  });
+
+  grid.querySelectorAll('.mb-total-override').forEach(el => {
+    const mid = el.dataset.mid;
+    const mb = state.mbs.find(m => m.id === mid);
+    if (!mb) return;
+    el.addEventListener('focus', e => { e.target.value = mb.totalBonusOverride != null && mb.totalBonusOverride !== '' ? String(mb.totalBonusOverride) : ''; e.target.select(); });
+    el.addEventListener('blur', e => {
+      const v = e.target.value.trim();
+      if (v === '') {
+        mb.totalBonusOverride = null;
+        e.target.value = '';
+      } else {
+        const num = parseInputNum(v);
+        mb.totalBonusOverride = num;
+        e.target.value = fmtInputNum(num);
+      }
+      saveState(); renderMBs(); renderSummary();
+    });
+  });
+
+  grid.querySelectorAll('.mb-total-override-clear').forEach(el => {
+    el.addEventListener('click', e => {
+      const mid = e.currentTarget.dataset.mid;
+      const mb = state.mbs.find(m => m.id === mid);
+      if (mb) { mb.totalBonusOverride = null; saveState(); renderMBs(); renderSummary(); }
     });
   });
 }
