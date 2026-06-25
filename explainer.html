@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCOM Performance Bonus — Team Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2eb;
+    --panel: #fffdf7;
+    --panel-2: #f0ebde;
+    --text: #2b2a26;
+    --text-dim: #5a5650;
+    --text-faint: #8a8580;
+    --border: #d8d2c1;
+    --border-soft: #e8e2d1;
+    --accent: #3d5a1f;
+    --accent-soft: rgba(61, 90, 31, 0.08);
+    --gold: #d4a017;
+    --gold-bg: rgba(212, 160, 23, 0.1);
+    --gold-soft: rgba(212, 160, 23, 0.06);
+    --red: #b8312f;
+    --red-bg: rgba(184, 49, 47, 0.07);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 64px 32px 96px;
+  }
+
+  /* Hero */
+  .doc-hero {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 40px;
+    margin-bottom: 56px;
+  }
+  .doc-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .doc-title {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin: 0 0 16px;
+    color: var(--text);
+  }
+  .doc-title .accent {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .doc-subtitle {
+    font-size: 18px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    max-width: 600px;
+    margin: 0 0 24px;
+  }
+  .doc-meta {
+    display: flex;
+    gap: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.06em;
+  }
+  .doc-meta-item span { color: var(--text); font-weight: 600; }
+
+  /* Section */
+  section {
+    margin-bottom: 64px;
+  }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .sec-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+  }
+  .sec-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .sec-title {
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin: 0;
+  }
+  .sec-lead {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text);
+    margin: 0 0 20px;
+    max-width: 680px;
+  }
+  p { font-size: 15px; line-height: 1.7; color: var(--text-dim); margin: 0 0 14px; }
+  p strong { color: var(--text); font-weight: 600; }
+
+  /* Big idea card */
+  .big-idea {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px;
+    padding: 28px 32px;
+    box-shadow: var(--shadow);
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .big-idea strong { color: var(--accent); font-weight: 600; }
+
+  /* Rules grid */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  @media (max-width: 720px) {
+    .rules-grid { grid-template-columns: 1fr; }
+  }
+  .rule-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+  }
+  .rule-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .rule-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .rule-body {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-dim);
+  }
+  .rule-body strong { color: var(--text); font-weight: 600; }
+
+  /* Two pools diagram */
+  .pools-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 12px 0 24px;
+  }
+  @media (max-width: 620px) {
+    .pools-diagram { grid-template-columns: 1fr; }
+  }
+  .pool-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .pool-card.internal { border-top: 3px solid var(--accent); }
+  .pool-card.whizzco { border-top: 3px solid var(--gold); }
+  .pool-card-head {
+    padding: 14px 20px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .pool-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .pool-tag.internal {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .pool-tag.whizzco {
+    background: var(--gold-bg);
+    color: #b8860b;
+    border: 1px solid var(--gold);
+  }
+  .pool-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .pool-card-body { padding: 16px 20px 20px; }
+  .pool-projects {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .pool-projects li {
+    padding: 5px 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .pool-note {
+    font-size: 12px;
+    color: var(--text-faint);
+    line-height: 1.55;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-soft);
+  }
+
+  /* Formula block */
+  .formula-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.9;
+    box-shadow: var(--shadow);
+  }
+  .formula-block .label { color: var(--text-faint); font-weight: 600; letter-spacing: 0.04em; }
+  .formula-block .arrow { color: var(--accent); margin: 0 8px; }
+  .formula-block .em { color: var(--accent); font-weight: 700; }
+  .formula-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border-soft);
+  }
+  .formula-line:last-child { border-bottom: none; }
+  .formula-line .left { color: var(--text-dim); }
+
+  /* Example boxes */
+  .example {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 22px 24px;
+    margin: 16px 0;
+    box-shadow: var(--shadow);
+  }
+  .example-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .example-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .example-rows {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .example-row {
+    display: grid;
+    grid-template-columns: 110px 80px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .example-row .pname { font-weight: 600; color: var(--text); }
+  .example-row .badge {
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+  .example-row .badge.win { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .example-row .badge.fail { background: var(--red-bg); color: var(--red); border: 1px solid rgba(184,49,47,0.3); }
+  .example-row .verdict { color: var(--text-dim); font-family: 'Inter', sans-serif; font-size: 13px; }
+  .example-verdict {
+    padding: 12px 14px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .example-verdict strong { color: var(--accent); }
+
+  /* Threshold visual */
+  .threshold-viz {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin: 16px 0;
+    box-shadow: var(--shadow);
+  }
+  .threshold-bar-wrap { position: relative; padding-top: 36px; padding-bottom: 36px; }
+  .threshold-bar {
+    height: 14px;
+    border-radius: 7px;
+    background: linear-gradient(90deg, var(--red-bg) 0%, var(--red-bg) 50%, var(--accent-soft) 50%, var(--accent-soft) 100%);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .threshold-line {
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    bottom: -10px;
+    width: 2px;
+    background: var(--text);
+    transform: translateX(-50%);
+  }
+  .threshold-label {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .threshold-label.line-label {
+    left: 50%;
+    top: 4px;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 8px;
+  }
+  .threshold-label.left {
+    left: 0;
+    top: 28px;
+    color: var(--red);
+  }
+  .threshold-label.right {
+    right: 0;
+    top: 28px;
+    color: var(--accent);
+  }
+  .threshold-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 14px;
+  }
+  .threshold-info-cell {
+    padding: 14px 16px;
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .threshold-info-cell.below {
+    background: var(--red-bg);
+    border: 1px solid rgba(184, 49, 47, 0.2);
+  }
+  .threshold-info-cell.above {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+  }
+  .threshold-info-cell strong { display: block; margin-bottom: 4px; font-weight: 700; }
+  .threshold-info-cell.below strong { color: var(--red); }
+  .threshold-info-cell.above strong { color: var(--accent); }
+
+  /* FAQ */
+  .faq-item {
+    border-bottom: 1px solid var(--border-soft);
+    padding: 18px 0;
+  }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .faq-a {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+  .faq-a strong { color: var(--text); font-weight: 600; }
+
+  /* Glossary */
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 14px 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+  }
+  @media (max-width: 620px) {
+    .glossary-grid { grid-template-columns: 1fr; gap: 4px 0; }
+    .glossary-term { margin-top: 14px; }
+  }
+  .glossary-term {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+  }
+  .glossary-def {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .container { padding: 32px; }
+    section { page-break-inside: avoid; }
+    .doc-hero { page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Hero -->
+  <div class="doc-hero">
+    <div class="doc-eyebrow">PCOM Performance Bonus &middot; Team Guide</div>
+    <h1 class="doc-title">How your bonus <span class="accent">is calculated</span>.</h1>
+    <p class="doc-subtitle">
+      A plain-English guide to the system. Read it once, refer back as needed. No jargon. No surprises.
+    </p>
+    <div class="doc-meta">
+      <div class="doc-meta-item">Audience: <span>Media Buyers &amp; Team Leader</span></div>
+      <div class="doc-meta-item">Scope: <span>Monthly bonus mechanics</span></div>
+    </div>
+  </div>
+
+  <!-- The Big Idea -->
+  <section>
+    <div class="big-idea">
+      You earn a share of a <strong>shared team bonus pool</strong> based on how well your assigned projects beat their monthly targets. The more you beat them by, the bigger your share. Your slice depends on <strong>your performance</strong> &mdash; not on what others do.
+    </div>
+  </section>
+
+  <!-- Section 1: Four Rules -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <h2 class="sec-title">The four rules</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="sec-lead">Everything else flows from these. If you remember nothing else, remember these four.</p>
+
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-num">01</div>
+        <div class="rule-title">Each project has a baseline</div>
+        <div class="rule-body">
+          A monthly target based on a <strong>weighted average of the past 3 months</strong>. The most recent month carries the most weight; older months count less.
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">02</div>
+        <div class="rule-title">Beat baseline to earn</div>
+        <div class="rule-body">
+          <strong>Below 100%</strong> &rarr; that project contributes <strong>$0</strong> to your bonus this month. <strong>At 100% or above</strong> &rarr; you earn a share.
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">03</div>
+        <div class="rule-title">Beat by more, earn more</div>
+        <div class="rule-body">
+          Your share grows with your achievement %. Hitting <strong>130%</strong> earns more than <strong>105%</strong>. There's no ceiling.
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num">04</div>
+        <div class="rule-title">Two independent pools</div>
+        <div class="rule-body">
+          <strong>Internal</strong> projects share one pool. <strong>Whizzco</strong> has its own. Earning from one doesn't depend on the other.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Baseline Deep Dive -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <h2 class="sec-title">How baseline is calculated</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="sec-lead">
+      The baseline is your monthly target. It reflects recent performance, not ancient history. This is the formula:
+    </p>
+
+    <div class="formula-block">
+      <div class="formula-line">
+        <span class="left">3 months ago</span><span class="em">&times; 15%</span>
+      </div>
+      <div class="formula-line">
+        <span class="left">2 months ago</span><span class="em">&times; 20%</span>
+      </div>
+      <div class="formula-line">
+        <span class="left">Last month</span><span class="em">&times; 65%</span>
+      </div>
+      <div class="formula-line" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px;">
+        <span class="left" style="color:var(--text); font-weight:600">Sum =</span>
+        <span class="em">Your baseline</span>
+      </div>
+    </div>
+
+    <p>
+      <strong>Why this works:</strong> if you've been trending up, your baseline rises with you &mdash; rewards stay realistic. If you've been struggling lately, the baseline drops to give you a fair shot.
+    </p>
+
+    <p style="margin-top: 16px;"><strong>Worked example:</strong> if a project earned $5K, $7K, and $10K in the last three months (oldest to newest):</p>
+    <div class="formula-block">
+      <div class="formula-line">
+        <span class="left">$5,000 &times; 15%</span><span>$750</span>
+      </div>
+      <div class="formula-line">
+        <span class="left">$7,000 &times; 20%</span><span>$1,400</span>
+      </div>
+      <div class="formula-line">
+        <span class="left">$10,000 &times; 65%</span><span>$6,500</span>
+      </div>
+      <div class="formula-line" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px;">
+        <span class="left" style="color:var(--text); font-weight:600">Baseline this month</span>
+        <span class="em">$8,650</span>
+      </div>
+    </div>
+    <p style="margin-top:8px">You need to beat $8,650 by end of month to earn from this project.</p>
+  </section>
+
+  <!-- Section 3: The 100% Threshold -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <h2 class="sec-title">The 100% threshold</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="sec-lead">
+      For each project you're assigned to, your <strong>Achievement %</strong> is the key number:
+    </p>
+
+    <div class="formula-block" style="text-align:center; font-size:16px; padding: 22px 24px;">
+      <span class="label">Achievement</span> = <span class="em">Projected EOM</span> &divide; <span class="em">Baseline</span> &times; 100
+    </div>
+
+    <p style="margin-top:8px"><strong>Projected EOM</strong> = your current MTD &times; (days in the month &divide; days passed). It's an estimate of where you'll land at end-of-month if you keep your current daily pace.</p>
+
+    <div class="threshold-viz">
+      <div class="threshold-bar-wrap">
+        <div class="threshold-bar">
+          <div class="threshold-line"></div>
+        </div>
+        <div class="threshold-label line-label">100% &middot; BASELINE</div>
+        <div class="threshold-label left">Below = $0</div>
+        <div class="threshold-label right">Above = Earning</div>
+      </div>
+      <div class="threshold-info">
+        <div class="threshold-info-cell below">
+          <strong>Below 100%</strong>
+          That project contributes <strong>nothing</strong> to your bonus this month. Other eligible projects still count &mdash; you're not locked out everywhere just because one project missed.
+        </div>
+        <div class="threshold-info-cell above">
+          <strong>100% or above</strong>
+          You're <strong>eligible</strong> from this project. The further you push past 100%, the bigger your share becomes.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Two Pools -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <h2 class="sec-title">Two independent pools</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="sec-lead">
+      The bonus isn't one big pile &mdash; it's split into two pools that work independently. Each pool is sized based on profit from <em>its</em> projects only.
+    </p>
+
+    <div class="pools-diagram">
+      <div class="pool-card internal">
+        <div class="pool-card-head">
+          <span class="pool-tag internal">INTERNAL</span>
+          <div class="pool-card-title">Internal Pool</div>
+        </div>
+        <div class="pool-card-body">
+          <ul class="pool-projects">
+            <li>Flareon</li>
+            <li>Brightdrop</li>
+            <li>Crowdx</li>
+            <li>Axen</li>
+            <li>Keylor</li>
+          </ul>
+          <div class="pool-note">
+            Sized based on the combined projected profit of these 5 projects. MBs assigned here compete for shares of this pool by how well they beat their baselines.
+          </div>
+        </div>
+      </div>
+
+      <div class="pool-card whizzco">
+        <div class="pool-card-head">
+          <span class="pool-tag whizzco">WHIZZCO</span>
+          <div class="pool-card-title">Whizzco Pool</div>
+        </div>
+        <div class="pool-card-body">
+          <ul class="pool-projects">
+            <li>Whizzco</li>
+          </ul>
+          <div class="pool-note">
+            A completely separate pool, sized only on Whizzco's profit. Only MBs assigned to Whizzco can earn from it. Failing your Internal project doesn't disqualify you here.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      <strong>Why two pools?</strong> Whizzco operates differently from the rest of the portfolio &mdash; different scale, different network, different mechanics. Mixing it into one pool would distort fairness. Keeping it independent means an MB assigned to both still has two chances to earn, and a struggling pool doesn't drag the other down.
+    </p>
+  </section>
+
+  <!-- Section 5: Worked Examples -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <h2 class="sec-title">Worked examples</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="sec-lead">
+      Three scenarios showing how the rules play out. These use illustrative achievement % &mdash; the actual numbers come from your dashboard each day.
+    </p>
+
+    <div class="example">
+      <div class="example-name">Example A</div>
+      <div class="example-title">MB assigned to two Internal projects</div>
+      <div class="example-rows">
+        <div class="example-row">
+          <div class="pname">Project A</div>
+          <div class="badge fail">95% ✗</div>
+          <div class="verdict">Below baseline &rarr; contributes $0</div>
+        </div>
+        <div class="example-row">
+          <div class="pname">Project B</div>
+          <div class="badge win">110% ✓</div>
+          <div class="verdict">Above baseline &rarr; earns share from Internal pool</div>
+        </div>
+      </div>
+      <div class="example-verdict">
+        <strong>Outcome:</strong> Earns from Project B only. Project A contributes nothing &mdash; but doesn't prevent earning from Project B.
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-name">Example B</div>
+      <div class="example-title">MB assigned to one Internal + Whizzco</div>
+      <div class="example-rows">
+        <div class="example-row">
+          <div class="pname">Internal Project</div>
+          <div class="badge fail">67% ✗</div>
+          <div class="verdict">Internal pool &rarr; nothing</div>
+        </div>
+        <div class="example-row">
+          <div class="pname">Whizzco</div>
+          <div class="badge win">101% ✓</div>
+          <div class="verdict">Whizzco pool &rarr; earns share</div>
+        </div>
+      </div>
+      <div class="example-verdict">
+        <strong>Outcome:</strong> Earns from Whizzco even though the Internal project missed. The two pools are independent &mdash; one failing doesn't lock the other.
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="example-name">Example C</div>
+      <div class="example-title">Top performer in both pools</div>
+      <div class="example-rows">
+        <div class="example-row">
+          <div class="pname">Internal Project</div>
+          <div class="badge win">128% ✓</div>
+          <div class="verdict">Above baseline &mdash; big share</div>
+        </div>
+        <div class="example-row">
+          <div class="pname">Whizzco</div>
+          <div class="badge win">101% ✓</div>
+          <div class="verdict">Above baseline &mdash; full share</div>
+        </div>
+      </div>
+      <div class="example-verdict">
+        <strong>Outcome:</strong> Earns from <em>both</em> pools. The Internal share is sized by how far past 100% the project went, so beating by 28% means a much larger share than just clearing 100%.
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Timing & Publishing -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">06</div>
+      <h2 class="sec-title">Timing &amp; publishing</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <p class="sec-lead">
+      Your dashboard isn't live data flying around every minute &mdash; it's a stable snapshot you can plan against.
+    </p>
+
+    <p>
+      <strong>Throughout the month</strong> your bonus shows as a <em>projection</em> &mdash; what you'd earn if you kept your current pace through end-of-month.
+    </p>
+    <p>
+      <strong>At end of month</strong> the bonus settles on <em>actual</em> profit, not the projection. The projection is a guidance signal, the actual is the payout.
+    </p>
+    <p>
+      <strong>Your view updates when your manager publishes</strong> &mdash; not continuously. This avoids numbers wobbling all day as raw data trickles in. When you see a "last updated" timestamp on your dashboard, that's the most recent snapshot.
+    </p>
+  </section>
+
+  <!-- Section 7: FAQ -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">07</div>
+      <h2 class="sec-title">Frequently asked questions</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">If one project misses baseline, do I lose everything?</div>
+      <div class="faq-a">
+        <strong>No.</strong> Each project is measured independently. One miss doesn't disqualify your other projects. You still earn shares from every project that beats its own baseline.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I see other team members' bonuses or achievements?</div>
+      <div class="faq-a">
+        <strong>No.</strong> Your dashboard shows only your own performance. Comparing isn't part of the system &mdash; your share is based on <em>your</em> achievement, not on beating others.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">My dashboard showed $X yesterday and $Y today. Why did it change?</div>
+      <div class="faq-a">
+        Two things can move the projection: <strong>(1)</strong> your actual performance improved or declined, which updates the projected EOM; <strong>(2)</strong> your manager published a new snapshot with refreshed data. Final payout uses actual end-of-month profit, not in-month projections.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What if I'm assigned to a brand new project with no history?</div>
+      <div class="faq-a">
+        Baselines need history to calculate. For new projects, your manager will set an interim target &mdash; usually based on early performance patterns. Once enough months pass, the standard weighted formula takes over.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Does going from 100% to 110% double my bonus from that project?</div>
+      <div class="faq-a">
+        <strong>No, it grows incrementally.</strong> Going from 100% to 110% increases your share by 10% relative to the 100% baseline contribution. Going from 100% to 200% effectively doubles your contribution. The relationship is proportional.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What counts as "actual" profit at end of month?</div>
+      <div class="faq-a">
+        Net profit from Voluum tracking, settled at month-end after all postbacks are received. The dashboard's "MTD" number is what's been tracked so far; "EOM actual" is the same number once the month closes and all conversions are confirmed.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I pace myself to just barely hit 100% and stop pushing?</div>
+      <div class="faq-a">
+        Technically you'll be eligible at 100% &mdash; but your share will be small. Pushing to 120%, 150%, or higher meaningfully grows your share. The system specifically rewards effort beyond the threshold.
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Glossary -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-num">08</div>
+      <h2 class="sec-title">Glossary</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="glossary-grid">
+      <div class="glossary-term">BASELINE</div>
+      <div class="glossary-def">The monthly target for a project. Calculated as a weighted average of the last 3 months' actual profit (15% / 20% / 65%).</div>
+
+      <div class="glossary-term">MTD</div>
+      <div class="glossary-def">Month to Date. The actual profit recorded so far in the current month.</div>
+
+      <div class="glossary-term">EOM</div>
+      <div class="glossary-def">End of Month. The closing point for the bonus period.</div>
+
+      <div class="glossary-term">PROJECTED EOM</div>
+      <div class="glossary-def">An estimate of where the project's profit will land at month-end if the current daily pace continues. Formula: MTD &times; (days in month &divide; days passed).</div>
+
+      <div class="glossary-term">ACHIEVEMENT %</div>
+      <div class="glossary-def">How much the projected EOM exceeds the baseline. Projected EOM &divide; Baseline &times; 100. Above 100% = eligible.</div>
+
+      <div class="glossary-term">INTERNAL POOL</div>
+      <div class="glossary-def">The bonus pool sized on combined profit from Flareon, Brightdrop, Crowdx, Axen, and Keylor.</div>
+
+      <div class="glossary-term">WHIZZCO POOL</div>
+      <div class="glossary-def">A separate, independent bonus pool sized only on Whizzco's profit.</div>
+
+      <div class="glossary-term">ELIGIBLE</div>
+      <div class="glossary-def">A project where your projected EOM beats or equals the baseline. Eligible projects contribute to your bonus; non-eligible ones contribute $0.</div>
+
+      <div class="glossary-term">PUBLISHED</div>
+      <div class="glossary-def">When the manager presses "Publish to Team", a snapshot of the data becomes visible to MBs and TL. Your view updates only at that moment.</div>
+    </div>
+  </section>
+
+  <footer>
+    PCOM Performance Bonus &middot; Internal guide &middot; Questions? Ask your team leader or manager.
+  </footer>
+
+</div>
+</body>
+</html>
