@@ -17,6 +17,7 @@ Live dashboard for the PCOM media buying team's monthly performance bonus.
 | MB · Anxhela | anxhela | anxhela2026 |
 | MB · Kasandra | kasandra | kasandra2026 |
 | MB · Semi | semi | semi2026 |
+| MB · Suela | suela | suela2026 |
 
 ⚠️ Distribute passwords privately. Do not share the production URL publicly.
 
