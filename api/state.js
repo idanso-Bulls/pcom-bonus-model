@@ -9,6 +9,7 @@ const USERS = {
   anxhela:  { password: 'anxhela2026',  role: 'mb' },
   kasandra: { password: 'kasandra2026', role: 'mb' },
   semi:     { password: 'semi2026',     role: 'mb' },
+  suela:    { password: 'suela2026',    role: 'mb' },
 };
 
 const KV_KEY = 'pcom:state';
