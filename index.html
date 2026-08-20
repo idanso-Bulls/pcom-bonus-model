@@ -1529,8 +1529,9 @@
                 <th style="width: 12%">2mo Ago</th>
                 <th style="width: 12%">Last Month</th>
                 <th style="width: 11%">Baseline <span style="color:var(--accent); text-transform:none; letter-spacing:0">(weighted)</span></th>
-                <th style="width: 7%">Adj %</th>
-                <th style="width: 13%">Actual (MTD)</th>
+                <th style="width: 6%">Adj %</th>
+                <th style="width: 7%" title="3 consecutive months above target = +$150 · EOM ≥ $100K = +$100">Streak</th>
+                <th style="width: 12%">Actual (MTD)</th>
                 <th style="width: 14%">Run Rate <span style="color:var(--text-faint); text-transform:none; letter-spacing:0">(projected EOM)</span></th>
                 <th style="width: 5%"></th>
               </tr>
@@ -1690,6 +1691,7 @@ function runMigrations() {
     if (!p.domain)   { const d = DEFAULT_PROJECTS.find(x => x.name === p.name); p.domain = d ? d.domain : ''; }
     if (!p.category) p.category = (p.name === 'Whizzco') ? 'whizzco' : 'internal';
     if (p.baselineMultiplier === undefined) p.baselineMultiplier = 100;
+    if (p.streak3m === undefined) p.streak3m = false;
   });
   const existingWhizzco = state.projects.find(p => p.name === 'Whizzco');
   if (!existingWhizzco) {
@@ -2096,7 +2098,7 @@ function computeBonus() {
       const achievement = (projectedActual / baseline) * 100;
       const eligible = achievement >= 100;
       const category = proj.category || 'internal';
-      return { proj, baseline, actualMTD, projectedActual, achievement, eligible, category, weight: eligible ? achievement : 0 };
+      return { proj, baseline, actualMTD, projectedActual, achievement, eligible, category, weight: eligible ? Math.max(0, achievement - 100) : 0 };
     }).filter(Boolean);
 
     const internalWeight = projectsDetail.filter(d => d.category !== 'whizzco').reduce((sum, d) => sum + d.weight, 0);
@@ -2126,8 +2128,24 @@ function computeBonus() {
     if (hasManual) overridesTotal += Number(b.mb.manualBonus);
   });
 
-  const internalMbPoolAfterOverrides = Math.max(0, internalMbPool - overridesTotal);
-  const poolOverdraw = Math.max(0, overridesTotal - internalMbPool);
+  // Milestone bonuses — deducted from pool before proportional distribution
+  mbBreakdowns.forEach(b => {
+    let ms = 0;
+    b.projectsDetail.forEach(d => {
+      if (d.category === 'whizzco') return;
+      const has100k = d.projectedActual >= 100000;
+      const hasStreak = d.proj.streak3m === true;
+      if (hasStreak) ms += 150;
+      else if (has100k) ms += 100;
+    });
+    b.milestoneBonus = ms;
+  });
+  const totalMilestones = mbBreakdowns.reduce((s, b) => s + b.milestoneBonus, 0);
+  // Update calculatedBonus to include milestones
+  mbBreakdowns.forEach(b => { b.calculatedBonus += b.milestoneBonus; });
+
+  const internalMbPoolAfterOverrides = Math.max(0, internalMbPool - overridesTotal - totalMilestones);
+  const poolOverdraw = Math.max(0, overridesTotal + totalMilestones - internalMbPool);
 
   // Distribution weight for non-overridden internal MBs
   const internalDistrWeight = mbBreakdowns.reduce((s, b) => s + (b.hasManualBonus ? 0 : b.internalWeight), 0);
@@ -2142,10 +2160,10 @@ function computeBonus() {
     } else if (b.hasManualBonus) {
       // Override replaces internal share. Whizzco share stays natural.
       b.internalShare = Number(b.mb.manualBonus);
-      b.bonus = b.internalShare + b.whizzcoShare;
+      b.bonus = b.internalShare + b.whizzcoShare + b.milestoneBonus;
     } else {
       b.internalShare = internalDistrWeight > 0 ? (b.internalWeight / internalDistrWeight) * internalMbPoolAfterOverrides : 0;
-      b.bonus = b.internalShare + b.whizzcoShare;
+      b.bonus = b.internalShare + b.whizzcoShare + b.milestoneBonus;
     }
 
     // projectsDetail shares: split bonus across projects proportionally
@@ -2170,7 +2188,7 @@ function computeBonus() {
     mbPool: internalMbPool + whizzcoMbPool,
     afterSafety: internalAfterSafety + whizzcoAfterSafety,
     mbPoolAfterOverrides: internalMbPoolAfterOverrides + whizzcoMbPool,
-    overridesTotal, poolOverdraw,
+    overridesTotal, poolOverdraw, totalMilestones,
     cfg, mbBreakdowns,
     globalWeight, internalGlobalWeight, whizzcoGlobalWeight,
     distrGlobalWeight: internalDistrWeight,
@@ -2273,7 +2291,7 @@ async function enterApp() {
 function renderProjects() {
   const tbody = document.getElementById('projectsBody');
   if (!state.projects.length) {
-    tbody.innerHTML = '<tr><td colspan="7"><div class="empty">No projects. Click "Add Project" to start.</div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10"><div class="empty">No projects. Click "Add Project" to start.</div></td></tr>';
     return;
   }
   const weights = getWeights();
@@ -2300,6 +2318,7 @@ function renderProjects() {
       <td><div class="currency-prefix"><input type="text" inputmode="decimal" class="proj-m1" value="${fmtInputNum(p.lastMonth)}"></div></td>
       <td><div class="currency-prefix"><input type="text" class="proj-baseline" value="${fmtInputNum(Math.round(baseline))}" readonly style="font-weight:700; color:${(p.baselineMultiplier != null && p.baselineMultiplier !== 100) ? 'var(--gold)' : 'var(--accent)'}"></div></td>
       <td><div style="position:relative"><input type="text" inputmode="decimal" class="proj-adj" value="${p.baselineMultiplier != null ? p.baselineMultiplier : 100}" style="padding-right:20px; text-align:right; ${(p.baselineMultiplier != null && p.baselineMultiplier !== 100) ? 'color:var(--gold); font-weight:700;' : ''}"><span style="position:absolute; right:7px; top:50%; transform:translateY(-50%); color:var(--text-faint); font-size:11px; pointer-events:none">%</span></div></td>
+      <td style="text-align:center"><input type="checkbox" class="proj-streak" ${p.streak3m ? 'checked' : ''} title="3+ months above target → +$150 bonus"></td>
       <td><div class="currency-prefix"><input type="text" inputmode="decimal" class="proj-actual" value="${fmtInputNum(p.actual)}"></div></td>
       <td><div class="currency-prefix"><input type="text" class="proj-runrate" value="${fmtInputNum(Math.round(runRate))}" readonly style="font-weight:700; color:${runRateColor}"></div></td>
       <td><button class="btn-danger btn proj-del" title="Delete">&times;</button></td>
@@ -2348,6 +2367,13 @@ function renderProjects() {
     m2In.addEventListener('input', e => { proj.twoMonthsAgo = parseInputNum(e.target.value); updateBaselineCell(); updateRunRateCell(); renderMBs(); renderSummary(); renderTL(); saveState(); });
     m1In.addEventListener('input', e => { proj.lastMonth = parseInputNum(e.target.value); updateBaselineCell(); updateRunRateCell(); renderMBs(); renderSummary(); renderTL(); saveState(); });
     const adjIn = tr.querySelector('.proj-adj');
+    const streakIn = tr.querySelector('.proj-streak');
+    if (streakIn) {
+      streakIn.addEventListener('change', e => {
+        proj.streak3m = e.target.checked;
+        saveState(); renderMBs(); renderSummary();
+      });
+    }
     adjIn.addEventListener('blur', e => {
       const v = parseFloat(e.target.value) || 100;
       proj.baselineMultiplier = v;
@@ -2480,6 +2506,15 @@ function renderMBs() {
         value: fmt2(data.whizzcoShare),
       });
     }
+    if (data.milestoneBonus > 0) {
+      const msParts = [];
+      data.projectsDetail.forEach(d => {
+        if (d.category === 'whizzco') return;
+        if (d.proj.streak3m) msParts.push(d.proj.name + ' &#127941;');
+        else if (d.projectedActual >= 100000) msParts.push(d.proj.name + ' 100K');
+      });
+      formulaParts.push({ label: 'Milestone: ' + msParts.join(' + '), value: fmt2(data.milestoneBonus) });
+    }
     const formulaHtml = formulaParts.length > 0
       ? formulaParts.map(p => `<div class="bd-row bd-formula-part"><span>${p.label}</span><span>${p.value}</span></div>`).join('')
       : '<div class="bd-row bd-formula"><span>—</span><span>—</span></div>';
@@ -2497,7 +2532,7 @@ function renderMBs() {
           const parts = [];
           if (data.hasTotalOverride) parts.push('Calculated would be: ' + fmt2(data.calculatedBonus));
           if (data.hasManualBonus) parts.push('Calculated would be: ' + fmt2(data.calculatedBonus));
-          parts.push('Weight: ' + data.weight.toFixed(1));
+          parts.push('Excess: ' + data.weight.toFixed(1) + '%');
           if (!data.hasManualBonus && data.internalWeight > 0 && computed.distrGlobalWeight > 0) {
             parts.push('Internal: ' + ((data.internalWeight/computed.distrGlobalWeight)*100).toFixed(1) + '%');
           }
