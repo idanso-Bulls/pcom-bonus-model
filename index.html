@@ -2897,7 +2897,8 @@ function renderTLScoped() {
 function renderMBScoped() {
   const container = document.getElementById('mbView');
   const s = getActiveState();
-  const mb = s.mbs.find(m => m.id === currentUser.mbId);
+  const mb = s.mbs.find(m => m.id === currentUser.mbId)
+           || s.mbs.find(m => m.name.toLowerCase() === currentUser.username.toLowerCase());
   if (!mb) {
     container.innerHTML = '<div class="empty">No data available for your account. Contact your manager.</div>';
     return;
