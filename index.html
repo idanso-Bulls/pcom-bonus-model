@@ -2100,8 +2100,8 @@ function computeBonus() {
       const achievement = (projectedActual / baseline) * 100;
       const eligible = achievement >= 100;
       const category = proj.category || 'internal';
-      // Weight = % above baseline × baseline (K$) — i.e. dollars above baseline / 10
-      return { proj, baseline, actualMTD, projectedActual, achievement, eligible, category, weight: eligible ? (Math.max(0, achievement - 100) * (baseline / 1000)) : 0 };
+      // Weight = achievement % × baseline (K$) — project size counts, not just %
+      return { proj, baseline, actualMTD, projectedActual, achievement, eligible, category, weight: eligible ? (achievement * (baseline / 1000)) : 0 };
     }).filter(Boolean);
 
     const internalWeight = projectsDetail.filter(d => d.category !== 'whizzco').reduce((sum, d) => sum + d.weight, 0);
@@ -2495,11 +2495,11 @@ function renderMBs() {
     const breakdownHtml = rows.map(r => r.bdRow).filter(Boolean).join('');
     // Build formula line(s) showing internal + whizzco contributions
     const formulaParts = [];
-    // Weight terms per eligible project: "(achievement − 100) × baseline K$"
+    // Weight terms per eligible project: "achievement × baseline K$"
     const weightTerms = (isWhizzco) => {
       const terms = data.projectsDetail
         .filter(d => d.weight > 0 && (d.category === 'whizzco') === isWhizzco)
-        .map(d => `${(d.achievement - 100).toFixed(1)} &times; ${(d.baseline / 1000).toFixed(1)}`);
+        .map(d => `${d.achievement.toFixed(1)} &times; ${(d.baseline / 1000).toFixed(1)}`);
       return terms.length > 1 ? `(${terms.join(' + ')})` : terms.join('');
     };
     if (data.hasManualBonus) {
@@ -3035,7 +3035,7 @@ function renderMBScoped() {
             <div class="mbg-rule-num">03</div>
             <div class="mbg-rule-content">
               <div class="mbg-rule-title">Beat by more, earn more</div>
-              <div class="mbg-rule-text">Your share grows with your achievement % <strong>AND</strong> with the size of your project baseline. Your weight is the % above baseline &times; baseline size, so a big project at <strong>130%</strong> can earn more than a small project at <strong>150%</strong>. Failing one project doesn't affect the share you earn from another.</div>
+              <div class="mbg-rule-text">Your share grows with your achievement % <strong>AND</strong> with the size of your project baseline. A big project hit at <strong>110%</strong> can earn more than a small project hit at <strong>200%</strong>. Failing one project doesn't affect the share you earn from another.</div>
             </div>
           </div>
           <div class="mbg-rule">
