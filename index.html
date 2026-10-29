@@ -1336,12 +1336,12 @@
           <div class="sum-sub" id="sumTotalProfitSub">$0 MTD &middot; day 1 of 30</div>
         </div>
         <div class="sum-cell">
-          <div class="sum-label">Whizzco Profit (at pace)</div>
+          <div class="sum-label">Internal 3 Profit (at pace)</div>
           <div class="sum-value" id="sumWhizzcoProfit">$0</div>
           <div class="sum-sub" id="sumWhizzcoProfitSub">$0 MTD</div>
         </div>
         <div class="sum-cell">
-          <div class="sum-label">Total Pool (Internal + Whizzco)</div>
+          <div class="sum-label">Total Pool (Internal + Internal 3)</div>
           <div class="sum-value accent" id="sumPool">$0</div>
           <div class="sum-sub" id="sumPoolFormula">— + —</div>
         </div>
@@ -1397,7 +1397,7 @@
           <div class="section-num">02</div>
           <div class="section-title">Bonus Pool Calculation</div>
           <div class="section-rule"></div>
-          <div class="section-hint">Two independent pools &middot; Internal &middot; Whizzco</div>
+          <div class="section-hint">Two independent pools &middot; Internal &middot; Internal 3</div>
         </div>
 
         <!-- INTERNAL POOL -->
@@ -1434,17 +1434,17 @@
           </div>
         </div>
 
-        <!-- WHIZZCO POOL -->
+        <!-- INTERNAL 3 POOL (data key: whizzco) -->
         <div class="pool-section-label">
-          <span class="pool-cat-tag whizzco">WHIZZCO</span>
+          <span class="pool-cat-tag whizzco">INTERNAL 3</span>
           <span class="pool-cat-projects">Stella + Semi only · independent pool</span>
         </div>
         <div class="pool-chain whizzco-chain">
           <div class="pool-step">
             <div class="pool-step-num">Step &middot; 01</div>
-            <div class="pool-step-label">Projected Whizzco Profit</div>
+            <div class="pool-step-label">Projected Internal 3 Profit</div>
             <div class="pool-step-value" id="poolStep1Whizzco">$0</div>
-            <div class="pool-step-sub">At current pace · Whizzco project</div>
+            <div class="pool-step-sub">At current pace · Whizzco + Zantix-AWIN</div>
           </div>
           <div class="pool-arrow">&times;</div>
           <div class="pool-step">
@@ -1459,7 +1459,7 @@
           <div class="pool-arrow">&times;</div>
           <div class="pool-step final whizzco-final">
             <div class="pool-step-num">Step &middot; 03</div>
-            <div class="pool-step-label">WHIZZCO POOL</div>
+            <div class="pool-step-label">INTERNAL 3 POOL</div>
             <div class="pool-step-value" id="poolStep3Whizzco">$0</div>
             <div class="pool-input-group">
               <label>Alloc:</label>
@@ -1652,6 +1652,7 @@ const DEFAULT_PROJECTS = [
   { id: 'p4', name: 'Axen',       domain: 'vzqfok.com',   channels: ['PDC', 'LWS'], category: 'internal', threeMonthsAgo: 3500, twoMonthsAgo: 3800, lastMonth: 4000, actual: 0 },
   { id: 'p5', name: 'Keylor',     domain: 'vhrux.com',    channels: ['HDR', 'DLN'], category: 'internal', threeMonthsAgo: 3000, twoMonthsAgo: 3200, lastMonth: 3500, actual: 0 },
   { id: 'p6', name: 'Whizzco',    domain: 'vol.wctracking.com', channels: [],        category: 'whizzco',  threeMonthsAgo: 0,    twoMonthsAgo: 0,    lastMonth: 0,    actual: 0 },
+  { id: 'p7', name: 'Zantix-AWIN', domain: '', channels: [],                   category: 'whizzco',  threeMonthsAgo: 0,    twoMonthsAgo: 0,    lastMonth: 0,    actual: 0 },
 ];
 
 const EXCLUDED_CHANNELS = ['DNL', 'NOC', 'cap1', 'ysp', 'cab'];
@@ -1691,10 +1692,18 @@ function runMigrations() {
     if (p.name === 'Bridrop') p.name = 'Brightdrop';
     if (!p.channels) { const d = DEFAULT_PROJECTS.find(x => x.name === p.name); p.channels = d ? [...d.channels] : []; }
     if (!p.domain)   { const d = DEFAULT_PROJECTS.find(x => x.name === p.name); p.domain = d ? d.domain : ''; }
-    if (!p.category) p.category = (p.name === 'Whizzco') ? 'whizzco' : 'internal';
+    if (!p.category) p.category = (p.name === 'Whizzco' || p.name === 'Zantix-AWIN') ? 'whizzco' : 'internal';
     if (p.baselineMultiplier === undefined) p.baselineMultiplier = 100;
     if (p.streak3m === undefined) p.streak3m = false;
   });
+  // Internal 3 pool (category key 'whizzco'): ensure Zantix-AWIN exists
+  const existingZantix = state.projects.find(p => p.name === 'Zantix-AWIN');
+  if (!existingZantix) {
+    const zid = state.projects.some(p => p.id === 'p7') ? 'p7_' + Date.now().toString(36) : 'p7';
+    state.projects.push({ id: zid, name: 'Zantix-AWIN', domain: '', channels: [], category: 'whizzco', threeMonthsAgo: 0, twoMonthsAgo: 0, lastMonth: 0, actual: 0 });
+  } else {
+    existingZantix.category = 'whizzco';
+  }
   const existingWhizzco = state.projects.find(p => p.name === 'Whizzco');
   if (!existingWhizzco) {
     state.projects.push({ id: 'p6', name: 'Whizzco', domain: 'vol.wctracking.com', channels: [], category: 'whizzco', threeMonthsAgo: 0, twoMonthsAgo: 0, lastMonth: 0, actual: 0 });
@@ -2512,7 +2521,7 @@ function renderMBs() {
     }
     if (data.whizzcoWeight > 0 && computed.whizzcoGlobalWeight > 0) {
       formulaParts.push({
-        label: `Whizzco: ${weightTerms(true)} (baseline K$) /${computed.whizzcoGlobalWeight.toFixed(1)} &times; ${fmt2(computed.whizzcoMbPool)}`,
+        label: `Internal 3: ${weightTerms(true)} (baseline K$) /${computed.whizzcoGlobalWeight.toFixed(1)} &times; ${fmt2(computed.whizzcoMbPool)}`,
         value: fmt2(data.whizzcoShare),
       });
     }
@@ -2547,7 +2556,7 @@ function renderMBs() {
             parts.push('Internal: ' + ((data.internalWeight/computed.distrGlobalWeight)*100).toFixed(1) + '%');
           }
           if (data.whizzcoWeight > 0 && computed.whizzcoGlobalWeight > 0) {
-            parts.push('Whizzco: ' + ((data.whizzcoWeight/computed.whizzcoGlobalWeight)*100).toFixed(1) + '%');
+            parts.push('Internal 3: ' + ((data.whizzcoWeight/computed.whizzcoGlobalWeight)*100).toFixed(1) + '%');
           }
           return parts.join(' · ');
         })()}</div>
@@ -2692,7 +2701,7 @@ function renderSummary() {
   document.getElementById('sumWhizzcoProfitSub').textContent = fmt(c.whizzcoProfitMTD) + ' MTD';
   document.getElementById('sumPool').textContent = fmt2(c.pool);
   document.getElementById('sumPoolFormula').textContent =
-    'Internal ' + fmt2(c.internalPool) + ' + Whizzco ' + fmt2(c.whizzcoPool);
+    'Internal ' + fmt2(c.internalPool) + ' + Internal 3 ' + fmt2(c.whizzcoPool);
 
   const eligibleMBs = c.mbBreakdowns.filter(b => b.hasEligible).length;
   const eligibleProjects = c.mbBreakdowns.reduce((s, b) => s + b.projectsDetail.filter(d => d.eligible).length, 0);
@@ -2956,7 +2965,7 @@ function renderMBScoped() {
       }
     }
     const catCls = d.category === 'whizzco' ? 'whizzco' : 'internal';
-    const catLabel = d.category === 'whizzco' ? 'WHIZZCO' : 'INTERNAL';
+    const catLabel = d.category === 'whizzco' ? 'INTERNAL 3' : 'INTERNAL';
     return `
       <div class="mbpd-row">
         <div>
@@ -3042,7 +3051,7 @@ function renderMBScoped() {
             <div class="mbg-rule-num">04</div>
             <div class="mbg-rule-content">
               <div class="mbg-rule-title">Two independent pools</div>
-              <div class="mbg-rule-text"><span class="mbg-cat internal">INTERNAL</span> projects share one pool. <span class="mbg-cat whizzco">WHIZZCO</span> has its own pool. Earning from one doesn't depend on the other.</div>
+              <div class="mbg-rule-text"><span class="mbg-cat internal">INTERNAL</span> projects share one pool. <span class="mbg-cat whizzco">INTERNAL 3</span> (Whizzco, Zantix-AWIN) has its own pool. Earning from one doesn't depend on the other.</div>
             </div>
           </div>
         </div>
