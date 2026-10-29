@@ -5,7 +5,7 @@
 const USERS = {
   manager:  { password: 'pcom-admin',   role: 'manager' },
   enri:     { password: 'enri2026',     role: 'tl' },
-  stella:   { password: 'stella2026',   role: 'mb' },
+  stella:   { password: 'stella2026',   role: 'tl3' },
   anxhela:  { password: 'anxhela2026',  role: 'mb' },
   kasandra: { password: 'kasandra2026', role: 'mb' },
   semi:     { password: 'semi2026',     role: 'mb' },

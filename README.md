@@ -13,7 +13,7 @@ Live dashboard for the PCOM media buying team's monthly performance bonus.
 |------|----------|----------|
 | Manager | manager | pcom-admin |
 | Team Leader | enri | enri2026 |
-| MB · Stella | stella | stella2026 |
+| Team Leader · Internal 3 · Stella | stella | stella2026 |
 | MB · Anxhela | anxhela | anxhela2026 |
 | MB · Kasandra | kasandra | kasandra2026 |
 | MB · Semi | semi | semi2026 |

@@ -1434,10 +1434,36 @@
           </div>
         </div>
 
+        <!-- Internal Team Leader (Enri) -->
+        <div class="tl-config-row">
+          <div class="tl-config-toggle">
+            <label class="tl-toggle-label">
+              <input type="checkbox" id="poolTlEnabled" checked>
+              <span>Internal Team Leader Bonus</span>
+            </label>
+          </div>
+          <div class="tl-config-fields">
+            <div class="tl-config-item">
+              <label>Name:</label>
+              <input type="text" id="poolTlName" value="Enri" placeholder="Team Leader name">
+            </div>
+            <div class="tl-config-item">
+              <label>Internal pool share:</label>
+              <div class="pct-suffix"><input type="number" id="poolTlPct" value="20" min="0" max="100" step="1"></div>
+            </div>
+            <div class="tl-config-item">
+              <label><input type="checkbox" id="poolMsEnabled" checked> Milestones</label>
+            </div>
+            <div class="tl-config-note">
+              From Internal pool only · Eligibility: at least one Internal project EOM &ge; baseline · Milestones: $150 streak / $100 at EOM &ge; $100K
+            </div>
+          </div>
+        </div>
+
         <!-- INTERNAL 3 POOL (data key: whizzco) -->
         <div class="pool-section-label">
           <span class="pool-cat-tag whizzco">INTERNAL 3</span>
-          <span class="pool-cat-projects">Stella + Semi only · independent pool</span>
+          <span class="pool-cat-projects">Whizzco · Zantix-AWIN · independent pool</span>
         </div>
         <div class="pool-chain whizzco-chain">
           <div class="pool-step">
@@ -1468,28 +1494,32 @@
           </div>
         </div>
 
-        <!-- Team Leader allocation -->
+        <!-- Internal 3 Team Leader (Stella) -->
         <div class="tl-config-row">
           <div class="tl-config-toggle">
             <label class="tl-toggle-label">
-              <input type="checkbox" id="poolTlEnabled" checked>
-              <span>Team Leader Bonus Enabled</span>
+              <input type="checkbox" id="poolI3TlEnabled" checked>
+              <span>Internal 3 Team Leader Bonus</span>
             </label>
           </div>
           <div class="tl-config-fields">
             <div class="tl-config-item">
               <label>Name:</label>
-              <input type="text" id="poolTlName" value="Enri" placeholder="Team Leader name">
+              <input type="text" id="poolI3TlName" value="Stella" placeholder="Team Leader name">
             </div>
             <div class="tl-config-item">
-              <label>Internal pool share:</label>
-              <div class="pct-suffix"><input type="number" id="poolTlPct" value="20" min="0" max="100" step="1"></div>
+              <label>Internal 3 pool share:</label>
+              <div class="pct-suffix"><input type="number" id="poolI3TlPct" value="100" min="0" max="100" step="1"></div>
+            </div>
+            <div class="tl-config-item">
+              <label><input type="checkbox" id="poolI3MsEnabled"> Milestones</label>
             </div>
             <div class="tl-config-note">
-              From Internal pool only · Eligibility: at least one Internal project EOM &ge; baseline
+              From Internal 3 pool only · Eligibility: at least one Internal 3 project EOM &ge; baseline · The rest of the pool goes to Internal 3 MBs
             </div>
           </div>
         </div>
+
       </section>
 
       <section>
@@ -1498,6 +1528,10 @@
           <div class="section-title">Projects &amp; Baselines</div>
           <div class="section-rule"></div>
           <div class="section-hint">Weighted baseline from 3 months of history</div>
+        </div>
+        <div class="pool-section-label">
+          <span class="pool-cat-tag internal">INTERNAL</span>
+          <span class="pool-cat-projects">Own baseline weights · TL Enri</span>
         </div>
         <div class="panel">
           <div class="weights-config">
@@ -1539,8 +1573,56 @@
             <tbody id="projectsBody"></tbody>
           </table>
           <div class="add-row">
-            <button class="btn" id="addProjectBtn">+ Add Project</button>
+            <button class="btn" id="addProjectBtn">+ Add Internal Project</button>
             <button class="btn btn-primary" id="importVoluumBtn">Import Voluum CSV</button>
+          </div>
+        </div>
+
+        <div class="pool-section-label">
+          <span class="pool-cat-tag whizzco">INTERNAL 3</span>
+          <span class="pool-cat-projects">Own baseline weights · TL Stella</span>
+        </div>
+        <div class="panel">
+          <div class="weights-config">
+            <span class="weights-config-label">Baseline weights</span>
+            <div class="weight-cell">
+              <span class="wlabel">3mo ago</span>
+              <input type="number" id="i3weight3" min="0" max="100" step="1">
+              <span class="wpct">%</span>
+            </div>
+            <div class="weight-cell">
+              <span class="wlabel">2mo ago</span>
+              <input type="number" id="i3weight2" min="0" max="100" step="1">
+              <span class="wpct">%</span>
+            </div>
+            <div class="weight-cell">
+              <span class="wlabel"><strong>Last month</strong></span>
+              <input type="number" id="i3weight1" min="0" max="100" step="1">
+              <span class="wpct">%</span>
+            </div>
+            <div class="weights-total-display" id="i3WeightsTotalDisplay">
+              Total: <span class="total-value" id="i3WeightsTotal">100</span>%
+            </div>
+          </div>
+          <table class="projects-table">
+            <thead>
+              <tr>
+                <th style="width: 18%">Project</th>
+                <th style="width: 12%">3mo Ago</th>
+                <th style="width: 12%">2mo Ago</th>
+                <th style="width: 12%">Last Month</th>
+                <th style="width: 11%">Baseline <span style="color:var(--accent); text-transform:none; letter-spacing:0">(weighted)</span></th>
+                <th style="width: 6%">Adj %</th>
+                <th style="width: 7%" title="Only counts if Internal 3 milestones are enabled">Streak</th>
+                <th style="width: 12%">Actual (MTD)</th>
+                <th style="width: 14%">Run Rate <span style="color:var(--text-faint); text-transform:none; letter-spacing:0">(projected EOM)</span></th>
+                <th style="width: 5%"></th>
+              </tr>
+            </thead>
+            <tbody id="projectsBodyI3"></tbody>
+          </table>
+          <div class="add-row">
+            <button class="btn" id="addProjectI3Btn">+ Add Internal 3 Project</button>
           </div>
         </div>
       </section>
@@ -1550,13 +1632,26 @@
           <div class="section-num">04</div>
           <div class="section-title">Media Buyers &amp; Pool Distribution</div>
           <div class="section-rule"></div>
-          <div class="section-hint">Pool split by achievement % — only on eligible projects</div>
+          <div class="section-hint">Pool split by achievement % &times; baseline size — only on eligible projects</div>
         </div>
-        <div id="tlCard"></div>
-        <div id="overdrawWarning"></div>
-        <div class="mb-grid" id="mbGrid"></div>
+        <div id="mbSection">
+          <div class="pool-section-label">
+            <span class="pool-cat-tag internal">INTERNAL</span>
+            <span class="pool-cat-projects">Team Leader &amp; media buyers of the Internal pool</span>
+          </div>
+          <div id="tlCard"></div>
+          <div id="overdrawWarning"></div>
+          <div class="mb-grid" id="mbGrid"></div>
+          <div class="pool-section-label">
+            <span class="pool-cat-tag whizzco">INTERNAL 3</span>
+            <span class="pool-cat-projects">Team Leader &amp; media buyers of the Internal 3 pool</span>
+          </div>
+          <div id="tlCardI3"></div>
+          <div class="mb-grid" id="mbGridI3"></div>
+        </div>
         <div class="add-row">
-          <button class="btn btn-primary" id="addMbBtn">+ Add Media Buyer</button>
+          <button class="btn btn-primary" id="addMbBtn">+ Add Internal MB</button>
+          <button class="btn btn-primary" id="addMbI3Btn">+ Add Internal 3 MB</button>
           <button class="btn" id="exportBtn">Export Data</button>
           <button class="btn" id="importBtn">Import Data</button>
           <input type="file" id="importFile" accept=".json" style="display:none">
@@ -1635,7 +1730,7 @@
 const USERS = {
   'manager':  { password: 'pcom-admin',    role: 'manager', mbId: null },
   'enri':     { password: 'enri2026',      role: 'tl',      mbId: null },
-  'stella':   { password: 'stella2026',    role: 'mb',      mbId: 'm1' },
+  'stella':   { password: 'stella2026',    role: 'tl3',     mbId: null },
   'anxhela':  { password: 'anxhela2026',   role: 'mb',      mbId: 'm2' },
   'kasandra': { password: 'kasandra2026',  role: 'mb',      mbId: 'm3' },
   'semi':     { password: 'semi2026',      role: 'mb',      mbId: 'm4' },
@@ -1660,14 +1755,13 @@ const EXCLUDED_GEOS = ['GB', '?'];
 const NOISE_DOMAINS = ['unknown_domain', 'unknown', 'n/a', 'na', '-', '?'];
 
 const DEFAULT_MBS = [
-  { id: 'm1', name: 'Stella',   assignments: [{ projectId: 'p3' }, { projectId: 'p6' }] },
   { id: 'm2', name: 'Anxhela',  assignments: [{ projectId: 'p5' }, { projectId: 'p4' }] },
   { id: 'm3', name: 'Kasandra', assignments: [{ projectId: 'p2' }] },
   { id: 'm4', name: 'Semi',     assignments: [{ projectId: 'p1' }, { projectId: 'p6' }] },
   { id: 'm5', name: 'Suela',   assignments: [{ projectId: 'p5' }] },
 ];
 
-const DEFAULT_POOL = { safetyCoeff: 40, allocation: 3.5, whizzcoSafetyCoeff: 40, whizzcoAllocation: 3.5, tlEnabled: true, tlName: 'Enri', tlPct: 20 };
+const DEFAULT_POOL = { safetyCoeff: 40, allocation: 3.5, whizzcoSafetyCoeff: 40, whizzcoAllocation: 3.5, tlEnabled: true, tlName: 'Enri', tlPct: 20, msEnabled: true, i3TlEnabled: true, i3TlName: 'Stella', i3TlPct: 100, i3MsEnabled: false };
 const DEFAULT_PERIOD = { dayOfMonth: null, daysInMonth: null }; // null = auto-detect from today
 const DEFAULT_WEIGHTS = { w1: 65, w2: 20, w3: 15 }; // last month, 2 mo ago, 3 mo ago
 
@@ -1688,6 +1782,12 @@ function runMigrations() {
   if (state.pool.tlPct === undefined) state.pool.tlPct = 20;
   if (state.pool.whizzcoSafetyCoeff === undefined) state.pool.whizzcoSafetyCoeff = state.pool.safetyCoeff;
   if (state.pool.whizzcoAllocation === undefined) state.pool.whizzcoAllocation = state.pool.allocation;
+  if (state.pool.msEnabled === undefined) state.pool.msEnabled = true;
+  if (state.pool.i3TlEnabled === undefined) state.pool.i3TlEnabled = true;
+  if (state.pool.i3TlName === undefined) state.pool.i3TlName = 'Stella';
+  if (state.pool.i3TlPct === undefined) state.pool.i3TlPct = 100;
+  if (state.pool.i3MsEnabled === undefined) state.pool.i3MsEnabled = false;
+  if (!state.i3Weights) state.i3Weights = JSON.parse(JSON.stringify(state.weights));
   state.projects.forEach(p => {
     if (p.name === 'Bridrop') p.name = 'Brightdrop';
     if (!p.channels) { const d = DEFAULT_PROJECTS.find(x => x.name === p.name); p.channels = d ? [...d.channels] : []; }
@@ -1715,6 +1815,18 @@ function runMigrations() {
   } else if (!existingWhizzco.domain) {
     existingWhizzco.domain = 'vol.wctracking.com';
   }
+  // Stella was promoted to Internal 3 Team Leader (one-time): drop her MB card
+  if (!state.meta) state.meta = {};
+  if (!state.meta.stellaTl3) {
+    state.mbs = state.mbs.filter(m => (m.name || '').trim().toLowerCase() !== 'stella');
+    state.meta.stellaTl3 = true;
+  }
+  // Each MB belongs to one pool's team (separate areas in the manager view)
+  state.mbs.forEach(m => {
+    if (m.team) return;
+    const projs = m.assignments.map(a => state.projects.find(p => p.id === a.projectId)).filter(Boolean);
+    m.team = (projs.length && projs.every(isI3Project)) ? 'i3' : 'internal';
+  });
 }
 
 // ============================================================
@@ -1935,19 +2047,24 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 
 function getPoolConfig() {
   if (currentUser && currentUser.role === 'manager') {
-    const tlEnabledEl = document.getElementById('poolTlEnabled');
-    const tlPctEl = document.getElementById('poolTlPct');
-    const tlNameEl = document.getElementById('poolTlName');
-    const wSafetyEl = document.getElementById('poolWhizzcoSafety');
-    const wAllocEl = document.getElementById('poolWhizzcoAllocation');
+    const el = id => document.getElementById(id);
+    const num = (id, fb) => { const e = el(id); return e ? (parseFloat(e.value) || 0) : fb; };
+    const chk = (id, fb) => { const e = el(id); return e ? e.checked : fb; };
+    const txt = (id, fb) => { const e = el(id); return e ? e.value : fb; };
+    const p = state.pool;
     return {
-      safetyCoeff: parseFloat(document.getElementById('poolSafety').value) || 0,
-      allocation: parseFloat(document.getElementById('poolAllocation').value) || 0,
-      whizzcoSafetyCoeff: wSafetyEl ? (parseFloat(wSafetyEl.value) || 0) : (state.pool.whizzcoSafetyCoeff || 0),
-      whizzcoAllocation: wAllocEl ? (parseFloat(wAllocEl.value) || 0) : (state.pool.whizzcoAllocation || 0),
-      tlEnabled: tlEnabledEl ? tlEnabledEl.checked : (state.pool.tlEnabled !== false),
-      tlPct: tlPctEl ? (parseFloat(tlPctEl.value) || 0) : (state.pool.tlPct || 0),
-      tlName: tlNameEl ? tlNameEl.value : (state.pool.tlName || 'Enri'),
+      safetyCoeff: num('poolSafety', p.safetyCoeff || 0),
+      allocation: num('poolAllocation', p.allocation || 0),
+      whizzcoSafetyCoeff: num('poolWhizzcoSafety', p.whizzcoSafetyCoeff || 0),
+      whizzcoAllocation: num('poolWhizzcoAllocation', p.whizzcoAllocation || 0),
+      tlEnabled: chk('poolTlEnabled', p.tlEnabled !== false),
+      tlPct: num('poolTlPct', p.tlPct || 0),
+      tlName: txt('poolTlName', p.tlName || 'Enri'),
+      msEnabled: chk('poolMsEnabled', p.msEnabled !== false),
+      i3TlEnabled: chk('poolI3TlEnabled', p.i3TlEnabled !== false),
+      i3TlPct: num('poolI3TlPct', p.i3TlPct !== undefined ? p.i3TlPct : 100),
+      i3TlName: txt('poolI3TlName', p.i3TlName || 'Stella'),
+      i3MsEnabled: chk('poolI3MsEnabled', p.i3MsEnabled === true),
     };
   }
   const s = getActiveState();
@@ -1959,18 +2076,33 @@ function getPoolConfig() {
     tlEnabled: s.pool.tlEnabled !== false,
     tlPct: s.pool.tlPct || 0,
     tlName: s.pool.tlName || 'Enri',
+    msEnabled: s.pool.msEnabled !== false,
+    i3TlEnabled: s.pool.i3TlEnabled !== false,
+    i3TlPct: s.pool.i3TlPct !== undefined ? s.pool.i3TlPct : 100,
+    i3TlName: s.pool.i3TlName || 'Stella',
+    i3MsEnabled: s.pool.i3MsEnabled === true,
   };
 }
 
 function syncPoolToState() {
-  const cfg = getPoolConfig();
-  state.pool.safetyCoeff = cfg.safetyCoeff;
-  state.pool.allocation = cfg.allocation;
-  state.pool.whizzcoSafetyCoeff = cfg.whizzcoSafetyCoeff;
-  state.pool.whizzcoAllocation = cfg.whizzcoAllocation;
-  state.pool.tlEnabled = cfg.tlEnabled;
-  state.pool.tlPct = cfg.tlPct;
-  state.pool.tlName = cfg.tlName;
+  Object.assign(state.pool, getPoolConfig());
+}
+
+// Internal 3 pool projects are stored with category key 'whizzco'
+function isI3Project(p) { return (p.category || 'internal') === 'whizzco'; }
+
+// Fill the Internal 3 / milestone inputs from state (manager view)
+function setI3PoolInputs() {
+  const p = state.pool, w = state.i3Weights || state.weights;
+  const set = (id, prop, v) => { const e = document.getElementById(id); if (e) e[prop] = v; };
+  set('poolI3TlEnabled', 'checked', p.i3TlEnabled !== false);
+  set('poolI3TlName', 'value', p.i3TlName || 'Stella');
+  set('poolI3TlPct', 'value', p.i3TlPct !== undefined ? p.i3TlPct : 100);
+  set('poolMsEnabled', 'checked', p.msEnabled !== false);
+  set('poolI3MsEnabled', 'checked', p.i3MsEnabled === true);
+  set('i3weight1', 'value', w.w1);
+  set('i3weight2', 'value', w.w2);
+  set('i3weight3', 'value', w.w3);
 }
 
 function getPeriod() {
@@ -1996,12 +2128,13 @@ function computeRunRate(totalProfit, pool) {
   return { ...p, ratio, dailyPace, projectedProfit, projectedPool, progressPct, daysLeft };
 }
 
-function getWeights() {
+function getWeights(pool = 'internal') {
+  const pre = pool === 'i3' ? 'i3weight' : 'weight';
   if (currentUser && currentUser.role === 'manager') {
-    const el1 = document.getElementById('weight1');
-    const el2 = document.getElementById('weight2');
-    const el3 = document.getElementById('weight3');
-    if (el1 && el2 && el3) {
+    const el1 = document.getElementById(pre + '1');
+    const el2 = document.getElementById(pre + '2');
+    const el3 = document.getElementById(pre + '3');
+    if (el1 && el2 && el3 && el1.value !== '') {
       return {
         w1: parseFloat(el1.value) || 0,
         w2: parseFloat(el2.value) || 0,
@@ -2010,17 +2143,18 @@ function getWeights() {
     }
   }
   const s = getActiveState();
-  return { w1: s.weights.w1, w2: s.weights.w2, w3: s.weights.w3 };
+  const w = (pool === 'i3' ? (s.i3Weights || s.weights) : s.weights) || DEFAULT_WEIGHTS;
+  return { w1: w.w1, w2: w.w2, w3: w.w3 };
 }
 
 function syncWeightsToState() {
-  const w = getWeights();
-  state.weights.w1 = w.w1;
-  state.weights.w2 = w.w2;
-  state.weights.w3 = w.w3;
+  state.weights = getWeights('internal');
+  state.i3Weights = getWeights('i3');
 }
 
-function computeBaseline(proj, weights) {
+// Each pool has its own baseline weights — the project's pool decides which apply
+function computeBaseline(proj) {
+  const weights = getWeights(isI3Project(proj) ? 'i3' : 'internal');
   const m1 = proj.lastMonth || 0;
   const m2 = proj.twoMonthsAgo || 0;
   const m3 = proj.threeMonthsAgo || 0;
@@ -2087,15 +2221,23 @@ function computeBonus() {
   const internalEligible = projectsEligibility.some(pe => (pe.proj.category || 'internal') !== 'whizzco' && pe.eligible);
   const anyProjectEligible = internalEligible; // back-compat name
   const eligibleProjects = projectsEligibility.filter(pe => pe.eligible);
+  const internalEligibleProjects = eligibleProjects.filter(pe => !isI3Project(pe.proj));
+  const i3EligibleProjects = eligibleProjects.filter(pe => isI3Project(pe.proj));
+  const i3Eligible = i3EligibleProjects.length > 0;
 
   // TL allocation comes only from Internal pool
   const tlPct = (cfg.tlEnabled && s.pool.tlPct !== undefined) ? s.pool.tlPct : 0;
   const tlPoolShare = cfg.tlEnabled ? internalPool * (tlPct / 100) : 0;
   const tlBonus = (cfg.tlEnabled && internalEligible) ? tlPoolShare : 0;
 
+  // Internal 3 TL allocation comes only from Internal 3 pool
+  const i3TlPct = cfg.i3TlEnabled ? (cfg.i3TlPct || 0) : 0;
+  const i3TlPoolShare = cfg.i3TlEnabled ? whizzcoPool * (i3TlPct / 100) : 0;
+  const i3TlBonus = (cfg.i3TlEnabled && i3Eligible) ? i3TlPoolShare : 0;
+
   // MB pools
   const internalMbPool = internalPool - tlPoolShare;
-  const whizzcoMbPool = whizzcoPool;
+  const whizzcoMbPool = whizzcoPool - i3TlPoolShare;
 
   // For each MB and assignment compute achievement, eligibility, weight per category
   const mbBreakdowns = s.mbs.map(mb => {
@@ -2123,12 +2265,28 @@ function computeBonus() {
   const whizzcoGlobalWeight = mbBreakdowns.reduce((s, b) => s + b.whizzcoWeight, 0);
   const globalWeight = internalGlobalWeight + whizzcoGlobalWeight;
 
-  // Whizzco distribution: always independent of overrides
+  // Milestone bonuses (per pool, if enabled) — deducted from that pool before proportional distribution
   mbBreakdowns.forEach(b => {
-    b.whizzcoShare = whizzcoGlobalWeight > 0 ? (b.whizzcoWeight / whizzcoGlobalWeight) * whizzcoMbPool : 0;
+    let ms = 0, i3ms = 0;
+    b.projectsDetail.forEach(d => {
+      const i3 = d.category === 'whizzco';
+      if (i3 ? !cfg.i3MsEnabled : !cfg.msEnabled) return;
+      const amt = d.proj.streak3m === true ? 150 : (d.projectedActual >= 100000 ? 100 : 0);
+      if (i3) i3ms += amt; else ms += amt;
+    });
+    b.milestoneBonus = ms;
+    b.i3MilestoneBonus = i3ms;
+  });
+  const totalMilestones = mbBreakdowns.reduce((s, b) => s + b.milestoneBonus, 0);
+  const totalI3Milestones = mbBreakdowns.reduce((s, b) => s + b.i3MilestoneBonus, 0);
+  const whizzcoMbPoolAfterMs = Math.max(0, whizzcoMbPool - totalI3Milestones);
+
+  // Internal 3 distribution: always independent of overrides
+  mbBreakdowns.forEach(b => {
+    b.whizzcoShare = whizzcoGlobalWeight > 0 ? (b.whizzcoWeight / whizzcoGlobalWeight) * whizzcoMbPoolAfterMs : 0;
     // Natural internal share (as if no overrides)
     b.internalShareNatural = internalGlobalWeight > 0 ? (b.internalWeight / internalGlobalWeight) * internalMbPool : 0;
-    b.calculatedBonus = b.internalShareNatural + b.whizzcoShare;
+    b.calculatedBonus = b.internalShareNatural + b.whizzcoShare + b.milestoneBonus + b.i3MilestoneBonus;
   });
 
   // Manual overrides apply to INTERNAL pool only
@@ -2140,21 +2298,6 @@ function computeBonus() {
     if (hasManual) overridesTotal += Number(b.mb.manualBonus);
   });
 
-  // Milestone bonuses — deducted from pool before proportional distribution
-  mbBreakdowns.forEach(b => {
-    let ms = 0;
-    b.projectsDetail.forEach(d => {
-      if (d.category === 'whizzco') return;
-      const has100k = d.projectedActual >= 100000;
-      const hasStreak = d.proj.streak3m === true;
-      if (hasStreak) ms += 150;
-      else if (has100k) ms += 100;
-    });
-    b.milestoneBonus = ms;
-  });
-  const totalMilestones = mbBreakdowns.reduce((s, b) => s + b.milestoneBonus, 0);
-  // Update calculatedBonus to include milestones
-  mbBreakdowns.forEach(b => { b.calculatedBonus += b.milestoneBonus; });
 
   const internalMbPoolAfterOverrides = Math.max(0, internalMbPool - overridesTotal - totalMilestones);
   const poolOverdraw = Math.max(0, overridesTotal + totalMilestones - internalMbPool);
@@ -2172,10 +2315,10 @@ function computeBonus() {
     } else if (b.hasManualBonus) {
       // Override replaces internal share. Whizzco share stays natural.
       b.internalShare = Number(b.mb.manualBonus);
-      b.bonus = b.internalShare + b.whizzcoShare + b.milestoneBonus;
+      b.bonus = b.internalShare + b.whizzcoShare + b.milestoneBonus + b.i3MilestoneBonus;
     } else {
       b.internalShare = internalDistrWeight > 0 ? (b.internalWeight / internalDistrWeight) * internalMbPoolAfterOverrides : 0;
-      b.bonus = b.internalShare + b.whizzcoShare + b.milestoneBonus;
+      b.bonus = b.internalShare + b.whizzcoShare + b.milestoneBonus + b.i3MilestoneBonus;
     }
 
     // projectsDetail shares: split bonus across projects proportionally
@@ -2206,6 +2349,8 @@ function computeBonus() {
     distrGlobalWeight: internalDistrWeight,
     ratio, period,
     tlBonus, tlPoolShare, tlPct, anyProjectEligible, internalEligible, eligibleProjects,
+    i3TlBonus, i3TlPoolShare, i3TlPct, i3Eligible, internalEligibleProjects, i3EligibleProjects,
+    totalI3Milestones, whizzcoMbPoolAfterMs,
   };
 }
 
@@ -2239,7 +2384,7 @@ async function enterApp() {
   document.getElementById('app').style.display = 'block';
   document.body.classList.add('authed');
   document.getElementById('currentUser').textContent = currentUser.username;
-  const roleLabel = currentUser.role === 'manager' ? 'Manager' : (currentUser.role === 'tl' ? 'Team Leader' : 'Media Buyer');
+  const roleLabel = currentUser.role === 'manager' ? 'Manager' : (currentUser.role === 'tl' ? 'Team Leader' : (currentUser.role === 'tl3' ? 'Team Leader · Internal 3' : 'Media Buyer'));
   document.getElementById('currentRole').textContent = roleLabel;
 
   if (currentUser.role === 'manager') {
@@ -2256,6 +2401,7 @@ async function enterApp() {
       document.getElementById('poolTlEnabled').checked = state.pool.tlEnabled !== false;
       document.getElementById('poolTlName').value = state.pool.tlName || 'Enri';
       document.getElementById('poolTlPct').value = state.pool.tlPct !== undefined ? state.pool.tlPct : 20;
+      setI3PoolInputs();
       const p = getPeriod();
       document.getElementById('dayOfMonth').value = p.dayOfMonth;
       document.getElementById('daysInMonth').value = p.daysInMonth;
@@ -2275,7 +2421,7 @@ async function enterApp() {
     hideLoading();
     if (gotFresh) applyManagerState();
 
-  } else if (currentUser.role === 'tl') {
+  } else if (currentUser.role === 'tl' || currentUser.role === 'tl3') {
     document.getElementById('managerView').style.display = 'none';
     document.getElementById('mbView').style.display = 'none';
     document.getElementById('tlView').style.display = 'block';
@@ -2283,7 +2429,7 @@ async function enterApp() {
     showLoading('Loading your data…');
     await apiLoadPublished();
     hideLoading();
-    renderTLScoped();
+    renderTLScoped(currentUser.role === 'tl3' ? 'i3' : 'internal');
 
   } else {
     document.getElementById('managerView').style.display = 'none';
@@ -2301,8 +2447,15 @@ async function enterApp() {
 // MANAGER: PROJECTS
 // ============================================================
 function renderProjects() {
-  const tbody = document.getElementById('projectsBody');
-  if (!state.projects.length) {
+  renderProjectsInto('projectsBody', p => !isI3Project(p));
+  renderProjectsInto('projectsBodyI3', p => isI3Project(p));
+}
+
+function renderProjectsInto(tbodyId, inPool) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  const list = state.projects.filter(inPool);
+  if (!list.length) {
     tbody.innerHTML = '<tr><td colspan="10"><div class="empty">No projects. Click "Add Project" to start.</div></td></tr>';
     return;
   }
@@ -2311,7 +2464,7 @@ function renderProjects() {
   const safeDay = Math.min(Math.max(period.dayOfMonth, 1), period.daysInMonth);
   const ratio = period.daysInMonth / safeDay;
 
-  tbody.innerHTML = state.projects.map(p => {
+  tbody.innerHTML = list.map(p => {
     const baseline = computeBaseline(p, weights);
     const actualMTD = p.actual || 0;
     const runRate = actualMTD * ratio;
@@ -2409,9 +2562,13 @@ function renderProjects() {
 // MANAGER: MEDIA BUYERS
 // ============================================================
 function renderMBs() {
-  const grid = document.getElementById('mbGrid');
+  const grid = document.getElementById('mbSection');
+  const gridInt = document.getElementById('mbGrid');
+  const gridI3 = document.getElementById('mbGridI3');
+  const emptyHtml = '<div class="empty" style="grid-column: 1/-1">No media buyers in this pool yet.</div>';
   if (!state.mbs.length) {
-    grid.innerHTML = '<div class="empty" style="grid-column: 1/-1">No media buyers. Click "Add Media Buyer" to start.</div>';
+    gridInt.innerHTML = emptyHtml;
+    gridI3.innerHTML = emptyHtml;
     return;
   }
 
@@ -2423,11 +2580,13 @@ function renderMBs() {
   let topMbId = null, topBonus = 0;
   computed.mbBreakdowns.forEach(b => { if (b.bonus > topBonus) { topBonus = b.bonus; topMbId = b.mb.id; } });
 
-  grid.innerHTML = state.mbs.map((mb, mbIdx) => {
+  const cardsHtml = state.mbs.map((mb, mbIdx) => {
     const data = computed.mbBreakdowns[mbIdx];
     const rows = mb.assignments.map((a, idx) => {
       const proj = state.projects.find(p => p.id === a.projectId);
-      const projOpts = state.projects.map(p =>
+      // Only projects from this MB's own pool can be picked
+      const mbIsI3 = (mb.team || 'internal') === 'i3';
+      const projOpts = state.projects.filter(p => isI3Project(p) === mbIsI3 || p.id === a.projectId).map(p =>
         '<option value="' + p.id + '"' + (p.id === a.projectId ? ' selected' : '') + '>' + (p.name || '—') + '</option>'
       ).join('');
 
@@ -2521,18 +2680,18 @@ function renderMBs() {
     }
     if (data.whizzcoWeight > 0 && computed.whizzcoGlobalWeight > 0) {
       formulaParts.push({
-        label: `Internal 3: ${weightTerms(true)} (baseline K$) /${computed.whizzcoGlobalWeight.toFixed(1)} &times; ${fmt2(computed.whizzcoMbPool)}`,
+        label: `Internal 3: ${weightTerms(true)} (baseline K$) /${computed.whizzcoGlobalWeight.toFixed(1)} &times; ${fmt2(computed.whizzcoMbPoolAfterMs)}`,
         value: fmt2(data.whizzcoShare),
       });
     }
-    if (data.milestoneBonus > 0) {
+    if (data.milestoneBonus + data.i3MilestoneBonus > 0) {
       const msParts = [];
       data.projectsDetail.forEach(d => {
-        if (d.category === 'whizzco') return;
+        if (d.category === 'whizzco' ? !computed.cfg.i3MsEnabled : !computed.cfg.msEnabled) return;
         if (d.proj.streak3m) msParts.push(d.proj.name + ' &#127941;');
         else if (d.projectedActual >= 100000) msParts.push(d.proj.name + ' 100K');
       });
-      formulaParts.push({ label: 'Milestone: ' + msParts.join(' + '), value: fmt2(data.milestoneBonus) });
+      formulaParts.push({ label: 'Milestone: ' + msParts.join(' + '), value: fmt2(data.milestoneBonus + data.i3MilestoneBonus) });
     }
     const formulaHtml = formulaParts.length > 0
       ? formulaParts.map(p => `<div class="bd-row bd-formula-part"><span>${p.label}</span><span>${p.value}</span></div>`).join('')
@@ -2587,7 +2746,11 @@ function renderMBs() {
         </div>` : ''}
       </div>
     `;
-  }).join('');
+  });
+  const intCards = [], i3Cards = [];
+  state.mbs.forEach((mb, i) => ((mb.team || 'internal') === 'i3' ? i3Cards : intCards).push(cardsHtml[i]));
+  gridInt.innerHTML = intCards.join('') || emptyHtml;
+  gridI3.innerHTML = i3Cards.join('') || emptyHtml;
 
   // wire listeners
   grid.querySelectorAll('.mb-name-input').forEach(el => {
@@ -2722,45 +2885,67 @@ function renderSummary() {
 // ============================================================
 // MANAGER: TEAM LEADER CARD
 // ============================================================
+// Per-pool Team Leader numbers ('internal' = Enri, 'i3' = Stella)
+function tlInfo(c, pool) {
+  const i3 = pool === 'i3';
+  return {
+    enabled: i3 ? c.cfg.i3TlEnabled : c.cfg.tlEnabled,
+    name: (i3 ? c.cfg.i3TlName : c.cfg.tlName) || 'Team Leader',
+    label: i3 ? 'Internal 3' : 'Internal',
+    pct: i3 ? c.i3TlPct : c.tlPct,
+    bonus: i3 ? c.i3TlBonus : c.tlBonus,
+    poolShare: i3 ? c.i3TlPoolShare : c.tlPoolShare,
+    eligible: i3 ? c.i3Eligible : c.internalEligible,
+    eligibleProjects: i3 ? c.i3EligibleProjects : c.internalEligibleProjects,
+    pool: i3 ? c.whizzcoPool : c.internalPool,
+    mbPool: i3 ? c.whizzcoMbPool : c.internalMbPool,
+    inPool: p => isI3Project(p) === i3,
+    shareOf: b => i3 ? b.whizzcoShare : b.internalShare,
+  };
+}
+
 function renderTL() {
-  const container = document.getElementById('tlCard');
-  if (!container) return;
   const c = computeBonus();
-  if (!c.cfg.tlEnabled) {
+  renderTLCard('tlCard', tlInfo(c, 'internal'));
+  renderTLCard('tlCardI3', tlInfo(c, 'i3'));
+}
+
+function renderTLCard(containerId, t) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  if (!t.enabled) {
     container.innerHTML = '';
     return;
   }
 
-  const tlName = c.cfg.tlName || 'Team Leader';
-  const isEligible = c.anyProjectEligible;
-  const statusCls = isEligible ? 'eligible' : 'ineligible';
-  const statusText = isEligible ? 'Eligible' : 'Not Eligible';
+  const statusCls = t.eligible ? 'eligible' : 'ineligible';
+  const statusText = t.eligible ? 'Eligible' : 'Not Eligible';
 
   // List of eligible projects (the ones that triggered TL eligibility)
-  const eligibleProjList = c.eligibleProjects.length > 0
-    ? c.eligibleProjects.map(ep => `<span class="tlc-proj-chip">${ep.proj.name} &middot; ${fmt(ep.projectedActual)}</span>`).join('')
+  const eligibleProjList = t.eligibleProjects.length > 0
+    ? t.eligibleProjects.map(ep => `<span class="tlc-proj-chip">${ep.proj.name} &middot; ${fmt(ep.projectedActual)}</span>`).join('')
     : '<span class="tlc-proj-chip none">— None yet —</span>';
 
   container.innerHTML = `
     <div class="tl-card">
       <div class="tl-card-header">
         <div>
-          <div class="tl-card-label">Team Leader · Oversight Bonus</div>
-          <div class="tl-card-name">${tlName}</div>
+          <div class="tl-card-label">${t.label} Team Leader · Oversight Bonus</div>
+          <div class="tl-card-name">${t.name}</div>
         </div>
         <span class="tl-card-status ${statusCls}">${statusText}</span>
       </div>
 
-      <div class="tl-card-bonus ${c.tlBonus > 0 ? '' : 'zero'}">${fmt2(c.tlBonus)}</div>
+      <div class="tl-card-bonus ${t.bonus > 0 ? '' : 'zero'}">${fmt2(t.bonus)}</div>
       <div class="tl-card-sub">
-        ${c.tlPct}% of pool &middot; ${isEligible ? 'paid' : 'reserved (no project hit baseline)'}
+        ${t.pct}% of ${t.label} pool &middot; ${t.eligible ? 'paid' : 'reserved (no project hit baseline)'}
       </div>
 
       <div class="tl-card-detail">
-        <div class="tlc-row"><span>Total bonus pool</span><strong>${fmt2(c.pool)}</strong></div>
-        <div class="tlc-row"><span>Team Leader share (${c.tlPct}%)</span><strong>${fmt2(c.tlPoolShare)}</strong></div>
-        <div class="tlc-row"><span>Eligibility check</span><strong>${isEligible ? '✓ ' + c.eligibleProjects.length + ' project' + (c.eligibleProjects.length === 1 ? '' : 's') + ' hit baseline' : '✗ No project hit baseline yet'}</strong></div>
-        <div class="tlc-row" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border)"><span>Remaining for MBs (${100 - c.tlPct}%)</span><strong>${fmt2(c.mbPool)}</strong></div>
+        <div class="tlc-row"><span>${t.label} pool</span><strong>${fmt2(t.pool)}</strong></div>
+        <div class="tlc-row"><span>Team Leader share (${t.pct}%)</span><strong>${fmt2(t.poolShare)}</strong></div>
+        <div class="tlc-row"><span>Eligibility check</span><strong>${t.eligible ? '✓ ' + t.eligibleProjects.length + ' project' + (t.eligibleProjects.length === 1 ? '' : 's') + ' hit baseline' : '✗ No project hit baseline yet'}</strong></div>
+        <div class="tlc-row" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border)"><span>Remaining for MBs (${100 - t.pct}%)</span><strong>${fmt2(t.mbPool)}</strong></div>
 
         <div class="tlc-projects">
           <div class="tlc-projects-label">Projects On Track (at current pace)</div>
@@ -2800,30 +2985,30 @@ function renderOverdrawWarning() {
 function renderAll() { renderProjects(); renderTL(); renderOverdrawWarning(); renderMBs(); renderSummary(); }
 
 // ============================================================
-// TL SCOPED VIEW (Enri)
+// TL SCOPED VIEW (Enri = Internal, Stella = Internal 3)
 // ============================================================
-function renderTLScoped() {
+function renderTLScoped(pool = 'internal') {
   const container = document.getElementById('tlView');
   const s = getActiveState();
   const c = computeBonus();
-  const tlName = c.cfg.tlName || 'Team Leader';
-  const isEligible = c.anyProjectEligible;
+  const t = tlInfo(c, pool);
+  const tlName = t.name;
+  const isEligible = t.eligible;
   const statusCls = isEligible ? 'eligible' : 'ineligible';
   const statusText = isEligible ? 'Eligible' : 'Not Eligible';
 
-  // Internal-only filters (TL is in charge of Internal team only)
-  const internalEligibleProjects = c.eligibleProjects.filter(ep => (ep.proj.category || 'internal') !== 'whizzco');
-  const internalProjects = s.projects.filter(p => (p.category || 'internal') !== 'whizzco');
+  // Only this TL's own pool is visible (Internal and Internal 3 are fully separate)
+  const poolEligibleProjects = t.eligibleProjects;
+  const poolProjects = s.projects.filter(t.inPool);
 
-  // Eligible projects chips (internal only)
-  const eligibleProjList = internalEligibleProjects.length > 0
-    ? internalEligibleProjects.map(ep => `<span class="tlc-proj-chip">${ep.proj.name} &middot; ${fmt(ep.projectedActual)}</span>`).join('')
+  // Eligible projects chips
+  const eligibleProjList = poolEligibleProjects.length > 0
+    ? poolEligibleProjects.map(ep => `<span class="tlc-proj-chip">${ep.proj.name} &middot; ${fmt(ep.projectedActual)}</span>`).join('')
     : '<span class="tlc-proj-chip none">— None yet —</span>';
 
-  // All projects status table (internal only)
-  const weights = getWeights();
-  const projectsHtml = internalProjects.map(p => {
-    const baseline = computeBaseline(p, weights);
+  // All projects status table
+  const projectsHtml = poolProjects.map(p => {
+    const baseline = computeBaseline(p);
     const actualMTD = p.actual || 0;
     const projectedEOM = actualMTD * c.ratio;
     const ach = baseline > 0 ? (projectedEOM / baseline) * 100 : 0;
@@ -2843,18 +3028,19 @@ function renderTLScoped() {
     `;
   }).join('');
 
-  // Team summary - each MB's INTERNAL share only (TL doesn't manage Whizzco)
+  // Team summary - each MB's share from this pool only
   const mbsHtml = c.mbBreakdowns.map(b => {
-    const internalProjs = b.projectsDetail.filter(d => d.category !== 'whizzco');
-    if (internalProjs.length === 0) return '';
-    const eligibleInternal = internalProjs.filter(d => d.eligible).length;
-    const totalInternal = internalProjs.length;
-    const cardCls = b.internalShare > 0 ? 'tl-mb-card on' : 'tl-mb-card off';
+    const poolProjs = b.projectsDetail.filter(d => t.inPool(d.proj));
+    if (poolProjs.length === 0) return '';
+    const eligibleCount = poolProjs.filter(d => d.eligible).length;
+    const totalCount = poolProjs.length;
+    const share = t.shareOf(b);
+    const cardCls = share > 0 ? 'tl-mb-card on' : 'tl-mb-card off';
     return `
       <div class="${cardCls}">
         <div class="tl-mb-name">${b.mb.name}</div>
-        <div class="tl-mb-bonus ${b.internalShare > 0 ? '' : 'zero'}">${fmt2(b.internalShare)}</div>
-        <div class="tl-mb-meta">${eligibleInternal} / ${totalInternal} project${totalInternal === 1 ? '' : 's'} on pace</div>
+        <div class="tl-mb-bonus ${share > 0 ? '' : 'zero'}">${fmt2(share)}</div>
+        <div class="tl-mb-meta">${eligibleCount} / ${totalCount} project${totalCount === 1 ? '' : 's'} on pace</div>
       </div>
     `;
   }).filter(html => html !== '').join('');
@@ -2869,16 +3055,16 @@ function renderTLScoped() {
     <div class="tl-scoped-wrap">
       <div class="mb-scoped-hello">
         <div class="mb-scoped-greeting">Welcome, ${tlName}</div>
-        <div class="mb-scoped-subgreeting">Team Leader Dashboard &middot; day ${c.period.dayOfMonth} of ${c.period.daysInMonth}</div>
+        <div class="mb-scoped-subgreeting">${t.label} Team Leader Dashboard &middot; day ${c.period.dayOfMonth} of ${c.period.daysInMonth}</div>
       </div>
 
       <!-- Hero: Your TL Bonus -->
       <div class="mb-hero">
         <div class="mb-hero-bonus-label">Projected EOM Team Leader Bonus</div>
-        <div class="mb-hero-bonus ${c.tlBonus > 0 ? '' : 'zero'}">${fmt2(c.tlBonus)}</div>
+        <div class="mb-hero-bonus ${t.bonus > 0 ? '' : 'zero'}">${fmt2(t.bonus)}</div>
         <div class="mb-hero-sub">
           <span class="tl-card-status ${statusCls}">${statusText}</span>
-          &middot; ${isEligible ? internalEligibleProjects.length + ' project' + (internalEligibleProjects.length === 1 ? '' : 's') + ' hit baseline' : 'no project hit baseline yet'}
+          &middot; ${isEligible ? poolEligibleProjects.length + ' project' + (poolEligibleProjects.length === 1 ? '' : 's') + ' hit baseline' : 'no project hit baseline yet'}
         </div>
         ${publishedStr ? `<div style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border-soft); font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); line-height: 1.6;">Based on current pace. Final bonus depends on actual end-of-month profit.<br>Numbers last updated by your manager: <strong style="color:var(--text)">${publishedStr}</strong></div>` : ''}
       </div>
@@ -2893,13 +3079,13 @@ function renderTLScoped() {
       <div class="tl-section">
         <div class="tl-section-label">Team Overview</div>
         <div class="tl-mb-grid">
-          ${mbsHtml}
+          ${mbsHtml || '<span class="tlc-proj-chip none">— No media buyers yet —</span>'}
         </div>
       </div>
 
-      <!-- Internal projects status -->
+      <!-- Pool projects status -->
       <div class="tl-section">
-        <div class="tl-section-label">Internal Projects Status</div>
+        <div class="tl-section-label">${t.label} Projects Status</div>
         <div class="tl-proj-list">
           ${projectsHtml}
         </div>
@@ -3088,6 +3274,7 @@ function importData(file) {
         state = parsed;
         if (!state.period) state.period = JSON.parse(JSON.stringify(DEFAULT_PERIOD));
         if (!state.weights) state.weights = JSON.parse(JSON.stringify(DEFAULT_WEIGHTS));
+        runMigrations();
         saveState();
         if (currentUser.role === 'manager') {
           document.getElementById('poolSafety').value = state.pool.safetyCoeff;
@@ -3097,6 +3284,7 @@ function importData(file) {
           document.getElementById('poolTlEnabled').checked = state.pool.tlEnabled !== false;
           document.getElementById('poolTlName').value = state.pool.tlName || 'Enri';
           document.getElementById('poolTlPct').value = state.pool.tlPct !== undefined ? state.pool.tlPct : 20;
+      setI3PoolInputs();
           const p = getPeriod();
           document.getElementById('dayOfMonth').value = p.dayOfMonth;
           document.getElementById('daysInMonth').value = p.daysInMonth;
@@ -3144,7 +3332,19 @@ document.getElementById('addProjectBtn').addEventListener('click', () => {
 document.getElementById('addMbBtn').addEventListener('click', () => {
   const newName = prompt('Media buyer name?');
   if (newName === null) return;
-  state.mbs.push({ id: uid(), name: newName || '', assignments: [{ projectId: '' }] });
+  state.mbs.push({ id: uid(), name: newName || '', team: 'internal', assignments: [{ projectId: '' }] });
+  saveState(); renderAll();
+});
+
+document.getElementById('addMbI3Btn').addEventListener('click', () => {
+  const newName = prompt('Internal 3 media buyer name?');
+  if (newName === null) return;
+  state.mbs.push({ id: uid(), name: newName || '', team: 'i3', assignments: [{ projectId: '' }] });
+  saveState(); renderAll();
+});
+
+document.getElementById('addProjectI3Btn').addEventListener('click', () => {
+  state.projects.push({ id: uid(), name: '', domain: '', channels: [], category: 'whizzco', threeMonthsAgo: 0, twoMonthsAgo: 0, lastMonth: 0, actual: 0 });
   saveState(); renderAll();
 });
 
@@ -3162,6 +3362,8 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   state.pool = JSON.parse(JSON.stringify(DEFAULT_POOL));
   state.period = JSON.parse(JSON.stringify(DEFAULT_PERIOD));
   state.weights = JSON.parse(JSON.stringify(DEFAULT_WEIGHTS));
+  state.i3Weights = JSON.parse(JSON.stringify(DEFAULT_WEIGHTS));
+  state.meta = { stellaTl3: true };
   document.getElementById('poolSafety').value = DEFAULT_POOL.safetyCoeff;
   document.getElementById('poolAllocation').value = DEFAULT_POOL.allocation;
   document.getElementById('poolWhizzcoSafety').value = DEFAULT_POOL.whizzcoSafetyCoeff;
@@ -3169,6 +3371,7 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   document.getElementById('poolTlEnabled').checked = DEFAULT_POOL.tlEnabled;
   document.getElementById('poolTlName').value = DEFAULT_POOL.tlName;
   document.getElementById('poolTlPct').value = DEFAULT_POOL.tlPct;
+  setI3PoolInputs();
   const p = getPeriod();
   document.getElementById('dayOfMonth').value = p.dayOfMonth;
   document.getElementById('daysInMonth').value = p.daysInMonth;
@@ -3186,15 +3389,18 @@ document.getElementById('poolWhizzcoAllocation').addEventListener('input', () =>
 document.getElementById('poolTlEnabled').addEventListener('change', () => { syncPoolToState(); renderTL(); renderMBs(); renderSummary(); saveState(); });
 document.getElementById('poolTlPct').addEventListener('input', () => { syncPoolToState(); renderTL(); renderMBs(); renderSummary(); saveState(); });
 document.getElementById('poolTlName').addEventListener('input', () => { syncPoolToState(); renderTL(); saveState(); });
+['poolI3TlEnabled', 'poolMsEnabled', 'poolI3MsEnabled'].forEach(id => document.getElementById(id).addEventListener('change', () => { syncPoolToState(); renderTL(); renderMBs(); renderSummary(); saveState(); }));
+document.getElementById('poolI3TlPct').addEventListener('input', () => { syncPoolToState(); renderTL(); renderMBs(); renderSummary(); saveState(); });
+document.getElementById('poolI3TlName').addEventListener('input', () => { syncPoolToState(); renderTL(); saveState(); });
 
 function refreshRunRateCells() {
-  const tbody = document.getElementById('projectsBody');
+  const tbody = document.getElementById('managerView');
   if (!tbody) return;
   const per = getPeriod();
   const safeD = Math.min(Math.max(per.dayOfMonth, 1), per.daysInMonth);
   const r = per.daysInMonth / safeD;
   const w = getWeights();
-  tbody.querySelectorAll('tr').forEach(tr => {
+  tbody.querySelectorAll('#projectsBody tr, #projectsBodyI3 tr').forEach(tr => {
     const pid = tr.dataset.pid;
     const proj = state.projects.find(x => x.id === pid);
     if (!proj) return;
@@ -3229,23 +3435,25 @@ document.getElementById('daysInMonth').addEventListener('input', e => {
 });
 
 function updateWeightsTotal() {
-  const w = getWeights();
-  const total = w.w1 + w.w2 + w.w3;
-  const el = document.getElementById('weightsTotal');
-  const wrap = document.getElementById('weightsTotalDisplay');
-  if (el) el.textContent = total;
-  if (wrap) {
-    wrap.classList.remove('valid', 'invalid');
-    if (total === 100) wrap.classList.add('valid');
-    else if (total > 0) wrap.classList.add('invalid');
-  }
+  [['internal', 'weightsTotal', 'weightsTotalDisplay'], ['i3', 'i3WeightsTotal', 'i3WeightsTotalDisplay']].forEach(([pool, totalId, wrapId]) => {
+    const w = getWeights(pool);
+    const total = w.w1 + w.w2 + w.w3;
+    const el = document.getElementById(totalId);
+    const wrap = document.getElementById(wrapId);
+    if (el) el.textContent = total;
+    if (wrap) {
+      wrap.classList.remove('valid', 'invalid');
+      if (total === 100) wrap.classList.add('valid');
+      else if (total > 0) wrap.classList.add('invalid');
+    }
+  });
 }
 
 function onWeightChange() {
   syncWeightsToState();
   updateWeightsTotal();
   // Update each project row's baseline display
-  document.querySelectorAll('#projectsBody tr').forEach(tr => {
+  document.querySelectorAll('#projectsBody tr, #projectsBodyI3 tr').forEach(tr => {
     const pid = tr.dataset.pid;
     const proj = state.projects.find(x => x.id === pid);
     if (proj) {
@@ -3254,6 +3462,7 @@ function onWeightChange() {
       if (cell) cell.value = Math.round(b);
     }
   });
+  renderTL();
   renderMBs();
   renderSummary();
   saveState();
@@ -3262,6 +3471,9 @@ function onWeightChange() {
 document.getElementById('weight1').addEventListener('input', onWeightChange);
 document.getElementById('weight2').addEventListener('input', onWeightChange);
 document.getElementById('weight3').addEventListener('input', onWeightChange);
+document.getElementById('i3weight1').addEventListener('input', onWeightChange);
+document.getElementById('i3weight2').addEventListener('input', onWeightChange);
+document.getElementById('i3weight3').addEventListener('input', onWeightChange);
 
 // ============================================================
 // VOLUUM CSV IMPORT
